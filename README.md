@@ -1,3 +1,5 @@
+# [TAKE ME TO THE WEBSITE](https://dromaniv.github.io/quizzer/)
+
 yeah just substitute the `questions_en.json` file for whatever and it'll work
 
 ## terminal version
