@@ -4827,7 +4827,7 @@
         "answers": [
             {
                 "text": "a specific type of VLAN network but extending over several local networks separated by the Internet",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             },
             {
                 "text": "virtual private network",

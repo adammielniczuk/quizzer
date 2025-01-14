@@ -168,7 +168,7 @@
       background: #2980b9;
     }
 
-    /* The new "Explain with ChatGPT" button */
+    /* The "Explain with ChatGPT" button */
     #explainBtn {
       background: #9b59b6;
       color: #fff;
@@ -177,9 +177,27 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 1rem;
+      margin-left: 10px;
     }
     #explainBtn:hover {
       background: #8e44ad;
+    }
+
+    /* ----------------
+       NEW BUTTON STYLE
+       ---------------- */
+    #askSzychowiakBtn {
+      background: #e67e22;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-left: 10px;
+    }
+    #askSzychowiakBtn:hover {
+      background: #d35400;
     }
 
     /* Score display */
@@ -248,8 +266,12 @@
       
       <!-- Single Action Button (Check -> Next) -->
       <button id="singleActionBtn">Check</button>
+      
       <!-- Explain with ChatGPT Button (hidden until after Check) -->
-      <button id="explainBtn" style="display: none; margin-left: 10px;">Explain with ChatGPT</button>
+      <button id="explainBtn" style="display: none;">Explain with ChatGPT</button>
+      
+      <!-- NEW BUTTON: Ask Szychowiak (hidden until after Check) -->
+      <button id="askSzychowiakBtn" style="display: none;">Ask Szychowiak</button>
     </div>
 
     <!-- End Screen -->
@@ -285,8 +307,9 @@
     const answersList = document.getElementById('answersList');
     
     const singleActionBtn = document.getElementById('singleActionBtn');
-    // The new "Explain with ChatGPT" button
     const explainBtn = document.getElementById('explainBtn');
+    // NEW BUTTON:
+    const askSzychowiakBtn = document.getElementById('askSzychowiakBtn');
     
     // End Screen
     const endScreen = document.getElementById('endScreen');
@@ -349,8 +372,9 @@
       // Reset hasChecked for this new question
       hasChecked = false;
       singleActionBtn.textContent = "Check";
-      // Hide the "Explain with ChatGPT" button until after "Check"
+      // Hide the "Explain with ChatGPT" button and "Ask Szychowiak" button until after "Check"
       explainBtn.style.display = 'none';
+      askSzychowiakBtn.style.display = 'none';
 
       // Clear answers
       answersList.innerHTML = "";
@@ -464,8 +488,9 @@
       hasChecked = true;
       singleActionBtn.textContent = "Next";
 
-      // ---- Make the "Explain with ChatGPT" button visible now ----
+      // ---- Make the "Explain with ChatGPT" button and "Ask Szychowiak" button visible now ----
       explainBtn.style.display = 'inline-block';
+      askSzychowiakBtn.style.display = 'inline-block';
 
       updateScoreDisplay();
     }
@@ -527,7 +552,6 @@
 
     // -----------------------
     // Explain with ChatGPT
-    // Use ?q= and include question + possible answers
     // -----------------------
     explainBtn.addEventListener('click', () => {
       const question = questions[currentQuestionIndex];
@@ -535,13 +559,38 @@
       // Build a string that includes the question and all answers + correctness
       let explanationPrompt = `Shortly explain and verify the correct answers.\nQuestion: ${question.text}\n\nAnswers:\n`;
       question.answers.forEach((answer, i) => {
-        // For example: "1. This is an answer (correct)" or "(maybe)" or "(incorrect)"
         explanationPrompt += `${i + 1}. ${answer.text} (${answer.correctness}?)\n`;
       });
 
       // Attempt to open ChatGPT passing the prompt via ?q=
       const chatGPTUrl = `https://chat.openai.com/?q=${encodeURIComponent(explanationPrompt)}`;
       window.open(chatGPTUrl, '_blank');
+    });
+
+    // -----------------------
+    // Ask Szychowiak
+    // -----------------------
+    askSzychowiakBtn.addEventListener('click', () => {
+      const question = questions[currentQuestionIndex];
+
+    // Build email subject and body
+    const emailSubject = "Request for Assistance with Cybersecurity Question";
+    let emailBody =
+      "Dear Mr. Szychowiak,\n\n" +
+      "I hope this message finds you well. I am reaching out to kindly request your assistance with a question I am having difficulty with. Your guidance would be greatly appreciated.\n\n" +
+      `Question: ${question.text}\n\n` +
+      "Here are the possible answers:\n";
+
+      // Append each answer + correctness
+      question.answers.forEach((answer, i) => {
+        emailBody += `${i + 1}. ${answer.text} (${answer.correctness})\n`;
+      });
+
+      // Encode the subject and body for a mailto link
+      const mailtoLink = `mailto:michal.szychowiak@cs.put.poznan.pl?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+      
+      // Open default mail client
+      window.location.href = mailtoLink;
     });
   </script>
 </body>
