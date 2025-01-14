@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Randomized Quiz App</title>
+  <style>
+    /* --------------------------
+       Basic reset and core styles
+       -------------------------- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f2f2f5;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      margin-bottom: 10px;
+    }
+
+    /* Container for the entire app */
+    .app-container {
+      max-width: 600px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    /* -------------
+       Landing Screen
+       ------------- */
+    #landingScreen {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    #landingScreen button {
+      margin-top: 15px;
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    #landingScreen button:hover {
+      background: #2980b9;
+    }
+
+    /* ---------------
+       Warning (Modal)
+       --------------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      display: none; /* hidden by default */
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      z-index: 999;
+    }
+    .modal {
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      text-align: center;
+      max-width: 400px;
+      margin: auto;
+    }
+    .modal p {
+      margin-bottom: 15px;
+    }
+    .modal button {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .modal button:hover {
+      background: #2980b9;
+    }
+
+    /* ---------------
+       Quiz Container
+       --------------- */
+    #quizContainer {
+      display: none; /* hidden until user starts quiz */
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    /* Card-like styling for each question */
+    .question-card {
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .question-card h2 {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      color: #444;
+    }
+    .answers {
+      list-style: none;
+      margin-top: 10px;
+    }
+    .answers li {
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+    }
+    .answers li label {
+      margin-left: 8px;
+      cursor: pointer;
+    }
+    /* When correctness is revealed */
+    .correct {
+      color: #2e7d32; /* green */
+      font-weight: bold;
+    }
+    .incorrect {
+      color: #c62828; /* red */
+      font-weight: bold;
+    }
+
+    /* Buttons under question */
+    #singleActionBtn {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    #singleActionBtn:hover {
+      background: #2980b9;
+    }
+
+    /* Score display */
+    #scoreDisplay {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 1.2rem;
+    }
+    #finalScore {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- App container -->
+  <div class="app-container">
+    
+    <!-- Landing screen -->
+    <div id="landingScreen">
+      <h1>Welcome to the Quiz App</h1>
+      <p>Test yourself with randomly shuffled questions and track your score.</p>
+      <button id="startQuizBtn">Start</button>
+    </div>
+    
+    <!-- Warning Modal -->
+    <div id="warningModal" class="modal-overlay">
+      <div class="modal">
+        <p><strong>Warning:</strong><br/>The correctness of answers may vary.<br/>Use this quiz for reference only.</p>
+        <button id="closeWarningBtn">Got it!</button>
+      </div>
+    </div>
+    
+    <!-- Quiz Container -->
+    <div id="quizContainer">
+      <!-- Score Display -->
+      <div id="scoreDisplay">Score: 0</div>
+      
+      <!-- Question Card -->
+      <div id="questionCard" class="question-card">
+        <h2 id="questionText">Question will appear here</h2>
+        <ul id="answersList" class="answers"></ul>
+      </div>
+      
+      <!-- Single Action Button (Check -> Next) -->
+      <button id="singleActionBtn">Check</button>
+
+      <!-- Final Score Display -->
+      <div id="finalScore"></div>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let questions = [];
+    let currentQuestionIndex = 0;
+    let totalScore = 0;
+
+    // We'll track whether the user has "checked" the current question
+    let hasChecked = false;
+    
+    // DOM elements
+    const landingScreen = document.getElementById('landingScreen');
+    const warningModal = document.getElementById('warningModal');
+    const quizContainer = document.getElementById('quizContainer');
+
+    const startQuizBtn = document.getElementById('startQuizBtn');
+    const closeWarningBtn = document.getElementById('closeWarningBtn');
+    
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const questionText = document.getElementById('questionText');
+    const answersList = document.getElementById('answersList');
+    
+    const singleActionBtn = document.getElementById('singleActionBtn');
+    const finalScoreDiv = document.getElementById('finalScore');
+
+    // -----------------------
+    // Fisher-Yates Shuffle
+    // -----------------------
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    // -----------------------
+    // Start Quiz Flow
+    // -----------------------
+    startQuizBtn.addEventListener('click', () => {
+      warningModal.style.display = 'flex';
+    });
+
+    closeWarningBtn.addEventListener('click', () => {
+      warningModal.style.display = 'none';
+      landingScreen.style.display = 'none';
+      quizContainer.style.display = 'block';
+      loadQuestions();
+    });
+
+    // -----------------------
+    // Fetch questions_en.json
+    // -----------------------
+    function loadQuestions() {
+      // IMPORTANT: This won't work if you open index.html from file://
+      // You must run a local server or host online
+      fetch('questions_en.json')
+        .then(response => response.json())
+        .then(data => {
+          questions = data;
+          // Shuffle the questions
+          shuffleArray(questions);
+          // Shuffle answers for each question
+          questions.forEach(q => shuffleArray(q.answers));
+          // Initialize quiz
+          currentQuestionIndex = 0;
+          totalScore = 0;
+          hasChecked = false;
+          scoreDisplay.textContent = `Score: ${totalScore.toFixed(2)}`;
+          showQuestion();
+        })
+        .catch(error => {
+          console.error("Error loading questions:", error);
+          alert("Could not load questions. Make sure you are running this through a local or remote web server. Check console for details.");
+        });
+    }
+
+    // -----------------------
+    // Show a Question
+    // -----------------------
+    function showQuestion() {
+      finalScoreDiv.textContent = ""; // clear final score if any
+      const question = questions[currentQuestionIndex];
+
+      // Reset hasChecked for new question
+      hasChecked = false;
+      singleActionBtn.textContent = "Check";
+
+      questionText.textContent = `Q${currentQuestionIndex + 1}: ${question.text}`;
+      answersList.innerHTML = "";
+
+      // Render each answer as a checkbox
+      question.answers.forEach((answer, index) => {
+        const li = document.createElement("li");
+        
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = `answer-${index}`;
+        checkbox.name = `answerGroup`;
+        checkbox.value = index;
+        
+        const label = document.createElement("label");
+        label.htmlFor = `answer-${index}`;
+        label.textContent = answer.text;
+        
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        answersList.appendChild(li);
+      });
+    }
+
+    // -----------------------
+    // Handle "Check" or "Next"
+    // -----------------------
+    singleActionBtn.addEventListener('click', () => {
+      if (!hasChecked) {
+        // If we haven't checked yet, do the "Check" logic
+        checkAnswers();
+      } else {
+        // If we already checked, do the "Next" logic
+        nextQuestion();
+      }
+    });
+
+    function checkAnswers() {
+      const question = questions[currentQuestionIndex];
+      const selectedCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]:checked');
+      const allCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]');
+
+      // If user hasn't selected anything, do nothing
+      if (selectedCheckboxes.length === 0) {
+        alert("Please select at least one answer.");
+        return;
+      }
+
+      // 1) Reveal correctness with styles
+      allCheckboxes.forEach((checkbox) => {
+        const idx = parseInt(checkbox.value);
+        const li = checkbox.parentElement;
+        const correctness = question.answers[idx].correctness;
+
+        if (correctness === 'correct') {
+          li.classList.add('correct');
+        } else {
+          li.classList.add('incorrect');
+        }
+        // Disable the checkbox after we check
+        checkbox.disabled = true;
+      });
+
+      // 2) Calculate partial credit
+      //    Score for this question = (# of correct picks / total correct) - (# of incorrect picks / total incorrect)
+      //    Then clamp it between 0 and 1.
+      const totalCorrect = question.answers.filter(a => a.correctness === 'correct').length;
+      const totalIncorrect = question.answers.filter(a => a.correctness === 'incorrect').length;
+
+      let correctPicked = 0;
+      let incorrectPicked = 0;
+
+      selectedCheckboxes.forEach(cb => {
+        const idx = parseInt(cb.value);
+        const correctness = question.answers[idx].correctness;
+        if (correctness === 'correct') correctPicked++;
+        else incorrectPicked++;
+      });
+
+      let questionScore = (correctPicked / totalCorrect) - (incorrectPicked / totalIncorrect);
+      if (questionScore < 0) questionScore = 0;
+      if (questionScore > 1) questionScore = 1;
+
+      totalScore += questionScore;
+      scoreDisplay.textContent = `Score: ${totalScore.toFixed(2)}`;
+
+      // Mark that we've checked answers
+      hasChecked = true;
+      // Change button text to "Next"
+      singleActionBtn.textContent = "Next";
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        showQuestion();
+      } else {
+        // Show final score
+        finalScoreDiv.innerHTML = `
+          <h2>Quiz Completed!</h2>
+          <p>Your total score is: <strong>${totalScore.toFixed(2)}</strong> / ${questions.length}</p>
+        `;
+        // Optionally, hide the singleActionBtn if you want
+        singleActionBtn.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
