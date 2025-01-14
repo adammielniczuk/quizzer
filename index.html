@@ -373,12 +373,6 @@
       const selectedCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]:checked');
       const allCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]');
 
-      // If user hasn't selected anything, prompt them
-      if (selectedCheckboxes.length === 0) {
-        alert("Please select at least one answer.");
-        return;
-      }
-
       // Reveal correctness by applying CSS classes
       allCheckboxes.forEach(checkbox => {
         const idx = parseInt(checkbox.value);
@@ -418,7 +412,6 @@
       // Score for this question is fractionCorrect minus fractionIncorrect
       let questionScore = fractionCorrect - fractionIncorrect;
 
-      // ----- Special Case -----
       // If there is only ONE correct answer and user chooses ANY incorrect option(s),
       // the score is forced to 0.
       if (totalCorrect === 1 && incorrectPicked > 0) {
