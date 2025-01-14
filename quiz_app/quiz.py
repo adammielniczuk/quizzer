@@ -96,7 +96,7 @@ class QuizPreparation:
 
             self.display_question_and_answers(question)
 
-            user_answers = input("\nEnter your answers (e.g., a,b,c): ").strip().lower()
+            user_answers = input("\nEnter your answers (e.g., a,b,c): ").strip().lower().replace(" ", "")
             user_answers_set = set(user_answers.split(","))
             correct_answers_set = self.get_correct_answers(question)
 
