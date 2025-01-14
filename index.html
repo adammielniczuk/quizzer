@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -147,7 +147,7 @@
       color: #c62828; /* red */
       font-weight: bold;
     }
-    /* Maybe in yellow (new) */
+    /* Maybe in yellow */
     .maybe {
       color: #f1c40f; /* yellow/gold */
       font-weight: bold;
@@ -177,27 +177,12 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 1rem;
-      margin-left: 10px;
       margin-right: 10px;
+      margin-left: 10px;
+      display: none;
     }
     #explainBtn:hover {
       background: #8e44ad;
-    }
-
-    /* ----------------
-       NEW BUTTON STYLE
-       ---------------- */
-    #askSzychowiakBtn {
-      background: #e67e22;
-      color: #fff;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    #askSzychowiakBtn:hover {
-      background: #d35400;
     }
 
     /* Score display */
@@ -231,6 +216,47 @@
       background: #2980b9;
     }
 
+    /* Rating container: "Rate proposed answers" */
+    #rateAnswersContainer {
+      display: none; /* Show after "Check" */
+      margin-top: 15px; /* Move down a bit */
+      text-align: center;
+    }
+    #rateAnswersContainer p {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    #likeBtn, #dislikeBtn {
+      background: #7f8c8d; /* Default Gray */
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 5px;
+      transition: background 0.3s;
+    }
+    #likeBtn:hover {
+      background: #16a085; /* Green on hover */
+    }
+    #dislikeBtn:hover {
+      background: #c0392b; /* Red on hover */
+    }
+    /* Active Like/Dislike styles */
+    .liked {
+      background: #16a085 !important; /* Green */
+      cursor: not-allowed;
+    }
+    .disliked {
+      background: #c0392b !important; /* Red */
+      cursor: not-allowed;
+    }
+    /* Disabled buttons should not change color */
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 1; /* Prevent graying out */
+    }
   </style>
 </head>
 <body>
@@ -241,7 +267,11 @@
     <div id="landingScreen">
       <h1>Cybersecurity Quiz</h1>
       <p>Test yourself with randomly shuffled questions and track your score.</p>
-      <p><span style="color: #2e7d32;"><b>Green</b></span><b> = Correct,</b> <span style="color: #f1c40f;"><b>Yellow</b></span><b> = Maybe,</b> <span style="color: #c62828;"><b>Red</b></span><b> = Incorrect</b></p>
+      <p>
+        <span style="color: #2e7d32;"><b>Green</b></span><b> = Correct,</b> 
+        <span style="color: #f1c40f;"><b>Yellow</b></span><b> = Maybe,</b> 
+        <span style="color: #c62828;"><b>Red</b></span><b> = Incorrect</b>
+      </p>
       <button id="startQuizBtn">Start</button>
     </div>
 
@@ -264,14 +294,22 @@
         <ul id="answersList" class="answers"></ul>
       </div>
 
-      <!-- Single Action Button (Check -> Next) -->
-      <button id="singleActionBtn">Check</button>
-      
-      <!-- Explain with ChatGPT Button (hidden until after Check) -->
-      <button id="explainBtn" style="display: none;">Explain with ChatGPT</button>
-      
-      <!-- NEW BUTTON: Ask Szychowiak (hidden until after Check) -->
-      <!-- <button id="askSzychowiakBtn" style="display: none;">Ask Szychowiak</button> -->
+      <!-- Single Action Button (Check -> Next) + Explain with ChatGPT -->
+      <div style="text-align:center;">
+        <button id="singleActionBtn">Check</button>
+        <button id="explainBtn">Explain with ChatGPT</button>
+      </div>
+
+      <!-- Rate Proposed Answers -->
+      <div id="rateAnswersContainer">
+        <p>Rate proposed answers:</p>
+        <button id="likeBtn">
+          👍 <span id="likeCount">0</span>
+        </button>
+        <button id="dislikeBtn">
+          👎 <span id="dislikeCount">0</span>
+        </button>
+      </div>
     </div>
 
     <!-- End Screen -->
@@ -307,7 +345,13 @@
     
     const singleActionBtn = document.getElementById('singleActionBtn');
     const explainBtn = document.getElementById('explainBtn');
-    // const askSzychowiakBtn = document.getElementById('askSzychowiakBtn');
+
+    // Rating area
+    const rateAnswersContainer = document.getElementById('rateAnswersContainer');
+    const likeBtn = document.getElementById('likeBtn');
+    const dislikeBtn = document.getElementById('dislikeBtn');
+    const likeCountSpan = document.getElementById('likeCount');
+    const dislikeCountSpan = document.getElementById('dislikeCount');
     
     const endScreen = document.getElementById('endScreen');
     const endMessage = document.getElementById('endMessage');
@@ -323,36 +367,71 @@
      * Our event -> multiple "counter up" calls, depending on what we want to track.
      */
     function trackEvent(action, details = {}) {
+      const questionNumber = details.questionNumber || (questions[currentQuestionIndex] && questions[currentQuestionIndex].number);
+      if (!questionNumber) {
+        console.error('Question number is undefined.');
+        return;
+      }
+
+      // Construct the counter URL with question number
+      // Format: /Q{number}_LIKE or /Q{number}_DISLIKE
+      let baseUrl = `https://api.counterapi.dev/v1/${namespace}/Q${questionNumber}`;
+      
       switch (action) {
         case 'GPT_CLICK':
-          // e.g. increment the "GPT_CLICK" counter by 1
-          fetch(`https://api.counterapi.dev/v1/${namespace}/GPT_CLICK/up`)
+          fetch(`${baseUrl}_GPT_CLICK/up`)
             .catch(err => console.error('Counter API error:', err));
           break;
 
         case 'ANSWER_CHECKED':
-          // We can increment the 'CORRECT' counter for each correct pick,
-          // and 'INCORRECT' for each incorrect pick.
           const correctCount = details.correctPicked || 0;
           const incorrectCount = details.incorrectPicked || 0;
-
-          // If user picked 2 correct answers, we do "up" 2 times
+          // Increment CORRECT
           for (let i = 0; i < correctCount; i++) {
-            fetch(`https://api.counterapi.dev/v1/${namespace}/CORRECT/up`)
+            fetch(`${baseUrl}_CORRECT/up`)
               .catch(err => console.error('Counter API error:', err));
           }
-
-          // Similarly for incorrect picks
+          // Increment INCORRECT
           for (let i = 0; i < incorrectCount; i++) {
-            fetch(`https://api.counterapi.dev/v1/${namespace}/INCORRECT/up`)
+            fetch(`${baseUrl}_INCORRECT/up`)
               .catch(err => console.error('Counter API error:', err));
           }
+          break;
+
+        case 'LIKE':
+          fetch(`${baseUrl}_LIKE/up`)
+            .then(() => updateLikeDislikeCounts(questionNumber)) // After incrementing, fetch updated counts
+            .catch(err => console.error('Counter API error:', err));
+          break;
+
+        case 'DISLIKE':
+          fetch(`${baseUrl}_DISLIKE/up`)
+            .then(() => updateLikeDislikeCounts(questionNumber)) // After incrementing, fetch updated counts
+            .catch(err => console.error('Counter API error:', err));
           break;
 
         default:
-          // If you have other events, you can handle them here
           break;
       }
+    }
+
+    // Fetch current Like/Dislike counts from the API
+    function updateLikeDislikeCounts(questionNumber) {
+      // LIKE
+      fetch(`https://api.counterapi.dev/v1/${namespace}/Q${questionNumber}_LIKE`)
+        .then(response => response.json())
+        .then(data => {
+          likeCountSpan.textContent = data.count;
+        })
+        .catch(err => console.error('Error fetching LIKE count:', err));
+
+      // DISLIKE
+      fetch(`https://api.counterapi.dev/v1/${namespace}/Q${questionNumber}_DISLIKE`)
+        .then(response => response.json())
+        .then(data => {
+          dislikeCountSpan.textContent = data.count;
+        })
+        .catch(err => console.error('Error fetching DISLIKE count:', err));
     }
 
     // -----------------------
@@ -411,9 +490,9 @@
       // Reset hasChecked for this new question
       hasChecked = false;
       singleActionBtn.textContent = "Check";
-      // Hide the "Explain with ChatGPT" button and "Ask Szychowiak" button until after "Check"
+      // Hide the "Explain with ChatGPT" button and rating area until after "Check"
       explainBtn.style.display = 'none';
-      // askSzychowiakBtn.style.display = 'none';
+      rateAnswersContainer.style.display = 'none';
 
       // Clear answers
       answersList.innerHTML = "";
@@ -440,7 +519,23 @@
         answersList.appendChild(li);
       });
 
+      // Reset Like/Dislike buttons
+      resetLikeDislikeButtons();
+
       updateScoreDisplay();
+    }
+
+    // -----------------------
+    // Reset Like/Dislike Buttons
+    // -----------------------
+    function resetLikeDislikeButtons() {
+      likeBtn.disabled = false;
+      dislikeBtn.disabled = false;
+      likeBtn.classList.remove('liked');
+      dislikeBtn.classList.remove('disliked');
+      // Ensure default background color
+      likeBtn.style.background = '#7f8c8d'; // Default Gray
+      dislikeBtn.style.background = '#7f8c8d'; // Default Gray
     }
 
     // -----------------------
@@ -475,6 +570,7 @@
           checkbox.parentElement.classList.add('incorrect');
         }
 
+        // Disable all checkboxes after checking
         checkbox.disabled = true; 
       });
 
@@ -502,27 +598,34 @@
 
       let questionScore = fractionCorrect - fractionIncorrect;
 
+      // If there is only 1 correct answer and user picks any incorrect, score = 0
       if (totalCorrectOrMaybe === 1 && incorrectPicked > 0) {
         questionScore = 0;
       }
+      // Clamp to [0, 1]
       if (questionScore < 0) questionScore = 0;
       if (questionScore > 1) questionScore = 1;
 
       totalScore += questionScore;
 
-      // NEW: track correctness with Counter API
+      // Track correctness with Counter API
       trackEvent('ANSWER_CHECKED', {
-        questionIndex: currentQuestionIndex,
+        questionNumber: question.number,
         questionText: question.text,
         correctPicked: correctPicked,
         incorrectPicked: incorrectPicked,
         questionScore: questionScore
       });
 
+      // Now user has checked
       hasChecked = true;
       singleActionBtn.textContent = "Next";
+      
+      // Show the "Explain with ChatGPT" button and rating area
       explainBtn.style.display = 'inline-block';
-      // askSzychowiakBtn.style.display = 'inline-block';
+      rateAnswersContainer.style.display = 'block';
+      // Update Like/Dislike counts so user sees the latest
+      updateLikeDislikeCounts(question.number);
 
       updateScoreDisplay();
     }
@@ -588,13 +691,33 @@
       const chatGPTUrl = `https://chat.openai.com/?q=${encodeURIComponent(explanationPrompt)}`;
       window.open(chatGPTUrl, '_blank');
 
-      // NEW: track GPT clicks with Counter API
+      // Track GPT clicks
       trackEvent('GPT_CLICK', {
-        questionIndex: currentQuestionIndex,
+        questionNumber: question.number,
         questionText: question.text
       });
     });
 
+    // -----------------------
+    // LIKE / DISLIKE
+    // -----------------------
+    likeBtn.addEventListener('click', () => {
+      if (likeBtn.disabled) return; // Prevent multiple clicks
+      trackEvent('LIKE', { questionNumber: questions[currentQuestionIndex].number });
+      // Change button appearance
+      likeBtn.classList.add('liked');
+      likeBtn.disabled = true;
+      dislikeBtn.disabled = true;
+    });
+
+    dislikeBtn.addEventListener('click', () => {
+      if (dislikeBtn.disabled) return; // Prevent multiple clicks
+      trackEvent('DISLIKE', { questionNumber: questions[currentQuestionIndex].number });
+      // Change button appearance
+      dislikeBtn.classList.add('disliked');
+      dislikeBtn.disabled = true;
+      likeBtn.disabled = true;
+    });
   </script>
 </body>
 </html>
