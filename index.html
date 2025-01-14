@@ -375,11 +375,12 @@
 
       // Construct the counter URL with question number
       // Format: /Q{number}_LIKE or /Q{number}_DISLIKE
-      let baseUrl = `https://api.counterapi.dev/v1/${namespace}/Q${questionNumber}`;
+      let baseUrl = `https://api.counterapi.dev/v1/${namespace}`;
+      let questionUrl = `${baseUrl}/Q${questionNumber}`;
       
       switch (action) {
         case 'GPT_CLICK':
-          fetch(`${baseUrl}_GPT_CLICK/up`)
+          fetch(`${baseUrl}/GPT_CLICK/up`)
             .catch(err => console.error('Counter API error:', err));
           break;
 
@@ -388,24 +389,24 @@
           const incorrectCount = details.incorrectPicked || 0;
           // Increment CORRECT
           for (let i = 0; i < correctCount; i++) {
-            fetch(`${baseUrl}_CORRECT/up`)
+            fetch(`${baseUrl}/CORRECT/up`)
               .catch(err => console.error('Counter API error:', err));
           }
           // Increment INCORRECT
           for (let i = 0; i < incorrectCount; i++) {
-            fetch(`${baseUrl}_INCORRECT/up`)
+            fetch(`${baseUrl}/INCORRECT/up`)
               .catch(err => console.error('Counter API error:', err));
           }
           break;
 
         case 'LIKE':
-          fetch(`${baseUrl}_LIKE/up`)
+          fetch(`${questionUrl}_LIKE/up`)
             .then(() => updateLikeDislikeCounts(questionNumber)) // After incrementing, fetch updated counts
             .catch(err => console.error('Counter API error:', err));
           break;
 
         case 'DISLIKE':
-          fetch(`${baseUrl}_DISLIKE/up`)
+          fetch(`${questionUrl}_DISLIKE/up`)
             .then(() => updateLikeDislikeCounts(questionNumber)) // After incrementing, fetch updated counts
             .catch(err => console.error('Counter API error:', err));
           break;
