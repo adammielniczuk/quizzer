@@ -6,7 +6,6 @@
   <title>Cybersecurity Quiz</title>
 
   <!-- Favicon Links -->
-  <!-- Standard favicon -->
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
   <style>
@@ -245,7 +244,7 @@
       <p><span style="color: #2e7d32;"><b>Green</b></span><b> = Correct,</b> <span style="color: #f1c40f;"><b>Yellow</b></span><b> = Maybe,</b> <span style="color: #c62828;"><b>Red</b></span><b> = Incorrect</b></p>
       <button id="startQuizBtn">Start</button>
     </div>
-    
+
     <!-- Warning Modal -->
     <div id="warningModal" class="modal-overlay">
       <div class="modal">
@@ -253,7 +252,7 @@
         <button id="closeWarningBtn">Got it!</button>
       </div>
     </div>
-    
+
     <!-- Quiz Container -->
     <div id="quizContainer">
       <!-- Score Display -->
@@ -264,7 +263,7 @@
         <h2 id="questionText">Question will appear here</h2>
         <ul id="answersList" class="answers"></ul>
       </div>
-      
+
       <!-- Single Action Button (Check -> Next) -->
       <button id="singleActionBtn">Check</button>
       
@@ -281,7 +280,6 @@
       <p id="endMessage"></p>
       <button id="shareResultBtn">Share your result</button>
     </div>
-
   </div>
 
   <script>
@@ -309,13 +307,53 @@
     
     const singleActionBtn = document.getElementById('singleActionBtn');
     const explainBtn = document.getElementById('explainBtn');
-    // NEW BUTTON:
     // const askSzychowiakBtn = document.getElementById('askSzychowiakBtn');
     
-    // End Screen
     const endScreen = document.getElementById('endScreen');
     const endMessage = document.getElementById('endMessage');
     const shareResultBtn = document.getElementById('shareResultBtn');
+
+    // ------------------------------------------------
+    // NEW: using Counter API to track events
+    // ------------------------------------------------
+    const namespace = 'putCybersecurityQuiz';  // Unique namespace
+    
+    /**
+     * trackEvent(action, details)
+     * Our event -> multiple "counter up" calls, depending on what we want to track.
+     */
+    function trackEvent(action, details = {}) {
+      switch (action) {
+        case 'GPT_CLICK':
+          // e.g. increment the "GPT_CLICK" counter by 1
+          fetch(`https://api.counterapi.dev/v1/${namespace}/GPT_CLICK/up`)
+            .catch(err => console.error('Counter API error:', err));
+          break;
+
+        case 'ANSWER_CHECKED':
+          // We can increment the 'CORRECT' counter for each correct pick,
+          // and 'INCORRECT' for each incorrect pick.
+          const correctCount = details.correctPicked || 0;
+          const incorrectCount = details.incorrectPicked || 0;
+
+          // If user picked 2 correct answers, we do "up" 2 times
+          for (let i = 0; i < correctCount; i++) {
+            fetch(`https://api.counterapi.dev/v1/${namespace}/CORRECT/up`)
+              .catch(err => console.error('Counter API error:', err));
+          }
+
+          // Similarly for incorrect picks
+          for (let i = 0; i < incorrectCount; i++) {
+            fetch(`https://api.counterapi.dev/v1/${namespace}/INCORRECT/up`)
+              .catch(err => console.error('Counter API error:', err));
+          }
+          break;
+
+        default:
+          // If you have other events, you can handle them here
+          break;
+      }
+    }
 
     // -----------------------
     // Fisher-Yates Shuffle
@@ -379,7 +417,7 @@
 
       // Clear answers
       answersList.innerHTML = "";
-      
+
       const question = questions[currentQuestionIndex];
       questionText.textContent = `Q${currentQuestionIndex + 1}: ${question.text}`;
 
@@ -406,51 +444,44 @@
     }
 
     // -----------------------
-    // Single button: Check or Next
+    // Single Action Button
     // -----------------------
     singleActionBtn.addEventListener('click', () => {
       if (!hasChecked) {
-        // If we haven't checked yet, do the "Check" logic
         checkAnswers();
       } else {
-        // If we've already checked, do the "Next" logic
         nextQuestion();
       }
     });
 
     // -----------------------
-    // Check Answers Logic
+    // Check Answers
     // -----------------------
     function checkAnswers() {
       const question = questions[currentQuestionIndex];
       const selectedCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]:checked');
       const allCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]');
 
-      // Reveal correctness by applying CSS classes
+      // Reveal correctness
       allCheckboxes.forEach(checkbox => {
         const idx = parseInt(checkbox.value);
         const correctness = question.answers[idx].correctness;
-
-        // Display style based on correctness
+        
         if (correctness === 'correct') {
           checkbox.parentElement.classList.add('correct');
         } else if (correctness === 'maybe') {
-          // "Maybe" displayed in yellow
           checkbox.parentElement.classList.add('maybe');
         } else {
           checkbox.parentElement.classList.add('incorrect');
         }
 
-        // Disable checkboxes so user can't change them after checking
-        checkbox.disabled = true;
+        checkbox.disabled = true; 
       });
 
       // --- SCORING ---
-      // Count how many are truly "correct" (including "maybe") and how many are "incorrect"
       const totalCorrectOrMaybe = question.answers.filter(a => a.correctness === 'correct' || a.correctness === 'maybe').length;
       const totalIncorrect = question.answers.filter(a => a.correctness === 'incorrect').length;
 
-      // Count how many correct/maybe vs. incorrect the user actually picked
       let correctPicked = 0;
       let incorrectPicked = 0;
 
@@ -469,27 +500,27 @@
       // Fraction of incorrect answers chosen vs total incorrect
       const fractionIncorrect = totalIncorrect > 0 ? (incorrectPicked / totalIncorrect) : 0;
 
-      // Score for this question is fractionCorrect minus fractionIncorrect
       let questionScore = fractionCorrect - fractionIncorrect;
 
-      // If there is only ONE correct/maybe answer and user chooses ANY incorrect option(s),
-      // force score to 0 to prevent partial credit from mixed picks.
       if (totalCorrectOrMaybe === 1 && incorrectPicked > 0) {
         questionScore = 0;
       }
-
-      // Clamp the score between 0 and 1
       if (questionScore < 0) questionScore = 0;
       if (questionScore > 1) questionScore = 1;
 
-      // Add this partial credit to total score
       totalScore += questionScore;
 
-      // Mark that we've checked this question
+      // NEW: track correctness with Counter API
+      trackEvent('ANSWER_CHECKED', {
+        questionIndex: currentQuestionIndex,
+        questionText: question.text,
+        correctPicked: correctPicked,
+        incorrectPicked: incorrectPicked,
+        questionScore: questionScore
+      });
+
       hasChecked = true;
       singleActionBtn.textContent = "Next";
-
-      // ---- Make the "Explain with ChatGPT" button and "Ask Szychowiak" button visible now ----
       explainBtn.style.display = 'inline-block';
       // askSzychowiakBtn.style.display = 'inline-block';
 
@@ -497,56 +528,47 @@
     }
 
     // -----------------------
-    // Next Question Logic
+    // Next Question
     // -----------------------
     function nextQuestion() {
       currentQuestionIndex++;
       if (currentQuestionIndex < questions.length) {
         showQuestion();
       } else {
-        // All questions completed
         showEndScreen();
       }
     }
 
     // -----------------------
-    // Show End Screen
+    // End Screen
     // -----------------------
     function showEndScreen() {
-      // Hide quiz container
       quizContainer.style.display = "none";
-      // Show end screen
       endScreen.style.display = "block";
-      // Display final score
       endMessage.innerHTML = `
         Your total score is: <strong>${totalScore.toFixed(2)}</strong> / ${questions.length}
       `;
     }
 
     // -----------------------
-    // Update Score Display
+    // Update Score
     // -----------------------
     function updateScoreDisplay() {
-      // 'completedQuestions' is how many questions we've checked so far
       const completedQuestions = hasChecked ? (currentQuestionIndex + 1) : currentQuestionIndex;
       scoreDisplay.textContent = `Score: ${totalScore.toFixed(2)}/${completedQuestions}`;
     }
 
     // -----------------------
-    // Share Result Button
+    // Share Result
     // -----------------------
     shareResultBtn.addEventListener('click', () => {
       const finalScore = `${totalScore.toFixed(2)}/${questions.length}`;
       const shareText = `I scored ${finalScore} on the Cybersecurity quiz!`;
 
       if (navigator.share) {
-        // Use Web Share API to share only the text
-        navigator.share({
-          text: shareText
-        })
-        .catch((error) => console.log('Share failed', error));
+        navigator.share({ text: shareText })
+          .catch((error) => console.log('Share failed', error));
       } else {
-        // Fallback: simply alert the user
         alert(shareText);
       }
     });
@@ -557,42 +579,22 @@
     explainBtn.addEventListener('click', () => {
       const question = questions[currentQuestionIndex];
       
-      // Build a string that includes the question and all answers + correctness
       let explanationPrompt = `Shortly explain and verify the correct answers.\nQuestion: ${question.text}\n\nAnswers:\n`;
       question.answers.forEach((answer, i) => {
         explanationPrompt += `${i + 1}. ${answer.text} (${answer.correctness}?)\n`;
       });
 
-      // Attempt to open ChatGPT passing the prompt via ?q=
+      // Example ChatGPT link
       const chatGPTUrl = `https://chat.openai.com/?q=${encodeURIComponent(explanationPrompt)}`;
       window.open(chatGPTUrl, '_blank');
-    });
 
-    // -----------------------
-    // Ask Szychowiak
-    // -----------------------
-    askSzychowiakBtn.addEventListener('click', () => {
-      const question = questions[currentQuestionIndex];
-
-    // Build email subject and body
-    const emailSubject = "Request for Assistance with Cybersecurity Question";
-    let emailBody =
-      "Dear Mr. Szychowiak,\n\n" +
-      "I hope this message finds you well. I am reaching out to kindly request your assistance with a question I am having difficulty with. Your guidance would be greatly appreciated.\n\n" +
-      `Question: ${question.text}\n\n` +
-      "Here are the possible answers:\n";
-
-      // Append each answer + correctness
-      question.answers.forEach((answer, i) => {
-        emailBody += `${i + 1}. ${answer.text}\n`;
+      // NEW: track GPT clicks with Counter API
+      trackEvent('GPT_CLICK', {
+        questionIndex: currentQuestionIndex,
+        questionText: question.text
       });
-
-      // Encode the subject and body for a mailto link
-      // const mailtoLink = `mailto:michal.szychowiak cs.put.poznan.pl?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-      
-      // Open default mail client
-      window.location.href = mailtoLink;
     });
+
   </script>
 </body>
 </html>
