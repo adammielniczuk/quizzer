@@ -137,13 +137,20 @@
       margin-left: 8px;
       cursor: pointer;
     }
-    /* When correctness is revealed */
+
+    /* Correct in green */
     .correct {
       color: #2e7d32; /* green */
       font-weight: bold;
     }
+    /* Incorrect in red */
     .incorrect {
       color: #c62828; /* red */
+      font-weight: bold;
+    }
+    /* Maybe in yellow (new) */
+    .maybe {
+      color: #f1c40f; /* yellow/gold */
       font-weight: bold;
     }
 
@@ -159,6 +166,20 @@
     }
     #singleActionBtn:hover {
       background: #2980b9;
+    }
+
+    /* The new "Explain with ChatGPT" button */
+    #explainBtn {
+      background: #9b59b6;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    #explainBtn:hover {
+      background: #8e44ad;
     }
 
     /* Score display */
@@ -202,6 +223,7 @@
     <div id="landingScreen">
       <h1>Cybersecurity Quiz</h1>
       <p>Test yourself with randomly shuffled questions and track your score.</p>
+      <p><span style="color: #2e7d32;"><b>Green</b></span><b> = Correct,</b> <span style="color: #f1c40f;"><b>Yellow</b></span><b> = Maybe,</b> <span style="color: #c62828;"><b>Red</b></span><b> = Incorrect</b></p>
       <button id="startQuizBtn">Start</button>
     </div>
     
@@ -226,6 +248,8 @@
       
       <!-- Single Action Button (Check -> Next) -->
       <button id="singleActionBtn">Check</button>
+      <!-- Explain with ChatGPT Button (hidden until after Check) -->
+      <button id="explainBtn" style="display: none; margin-left: 10px;">Explain with ChatGPT</button>
     </div>
 
     <!-- End Screen -->
@@ -261,6 +285,8 @@
     const answersList = document.getElementById('answersList');
     
     const singleActionBtn = document.getElementById('singleActionBtn');
+    // The new "Explain with ChatGPT" button
+    const explainBtn = document.getElementById('explainBtn');
     
     // End Screen
     const endScreen = document.getElementById('endScreen');
@@ -323,6 +349,8 @@
       // Reset hasChecked for this new question
       hasChecked = false;
       singleActionBtn.textContent = "Check";
+      // Hide the "Explain with ChatGPT" button until after "Check"
+      explainBtn.style.display = 'none';
 
       // Clear answers
       answersList.innerHTML = "";
@@ -376,45 +404,52 @@
       // Reveal correctness by applying CSS classes
       allCheckboxes.forEach(checkbox => {
         const idx = parseInt(checkbox.value);
-        const li = checkbox.parentElement;
         const correctness = question.answers[idx].correctness;
 
+        // Display style based on correctness
         if (correctness === 'correct') {
-          li.classList.add('correct');
+          checkbox.parentElement.classList.add('correct');
+        } else if (correctness === 'maybe') {
+          // "Maybe" displayed in yellow
+          checkbox.parentElement.classList.add('maybe');
         } else {
-          li.classList.add('incorrect');
+          checkbox.parentElement.classList.add('incorrect');
         }
 
         // Disable checkboxes so user can't change them after checking
         checkbox.disabled = true;
       });
 
-      // Calculate partial credit for this question
-      const totalCorrect = question.answers.filter(a => a.correctness === 'correct').length;
+      // --- SCORING ---
+      // Count how many are truly "correct" (including "maybe") and how many are "incorrect"
+      const totalCorrectOrMaybe = question.answers.filter(a => a.correctness === 'correct' || a.correctness === 'maybe').length;
       const totalIncorrect = question.answers.filter(a => a.correctness === 'incorrect').length;
 
-      // Count how many correct/incorrect user picked
+      // Count how many correct/maybe vs. incorrect the user actually picked
       let correctPicked = 0;
       let incorrectPicked = 0;
 
       selectedCheckboxes.forEach(cb => {
         const idx = parseInt(cb.value);
         const correctness = question.answers[idx].correctness;
-        if (correctness === 'correct') correctPicked++;
-        else incorrectPicked++;
+        if (correctness === 'correct' || correctness === 'maybe') {
+          correctPicked++;
+        } else {
+          incorrectPicked++;
+        }
       });
 
       // Fraction of correct answers chosen vs total correct
-      const fractionCorrect = totalCorrect > 0 ? (correctPicked / totalCorrect) : 0;
+      const fractionCorrect = totalCorrectOrMaybe > 0 ? (correctPicked / totalCorrectOrMaybe) : 0;
       // Fraction of incorrect answers chosen vs total incorrect
       const fractionIncorrect = totalIncorrect > 0 ? (incorrectPicked / totalIncorrect) : 0;
 
       // Score for this question is fractionCorrect minus fractionIncorrect
       let questionScore = fractionCorrect - fractionIncorrect;
 
-      // If there is only ONE correct answer and user chooses ANY incorrect option(s),
-      // the score is forced to 0.
-      if (totalCorrect === 1 && incorrectPicked > 0) {
+      // If there is only ONE correct/maybe answer and user chooses ANY incorrect option(s),
+      // force score to 0 to prevent partial credit from mixed picks.
+      if (totalCorrectOrMaybe === 1 && incorrectPicked > 0) {
         questionScore = 0;
       }
 
@@ -428,6 +463,9 @@
       // Mark that we've checked this question
       hasChecked = true;
       singleActionBtn.textContent = "Next";
+
+      // ---- Make the "Explain with ChatGPT" button visible now ----
+      explainBtn.style.display = 'inline-block';
 
       updateScoreDisplay();
     }
@@ -476,15 +514,34 @@
       const shareText = `I scored ${finalScore} on the Cybersecurity quiz!`;
 
       if (navigator.share) {
-          // Use Web Share API to share only the text
-          navigator.share({
-            text: shareText
-          })
-          .catch((error) => console.log('Share failed', error));
+        // Use Web Share API to share only the text
+        navigator.share({
+          text: shareText
+        })
+        .catch((error) => console.log('Share failed', error));
       } else {
-          // Fallback: simply alert the user
-          alert(shareText);
+        // Fallback: simply alert the user
+        alert(shareText);
       }
+    });
+
+    // -----------------------
+    // Explain with ChatGPT
+    // Use ?q= and include question + possible answers
+    // -----------------------
+    explainBtn.addEventListener('click', () => {
+      const question = questions[currentQuestionIndex];
+      
+      // Build a string that includes the question and all answers + correctness
+      let explanationPrompt = `Shortly explain and verify the correct answers.\nQuestion: ${question.text}\n\nAnswers:\n`;
+      question.answers.forEach((answer, i) => {
+        // For example: "1. This is an answer (correct)" or "(maybe)" or "(incorrect)"
+        explanationPrompt += `${i + 1}. ${answer.text} (${answer.correctness})\n`;
+      });
+
+      // Attempt to open ChatGPT passing the prompt via ?q=
+      const chatGPTUrl = `https://chat.openai.com/?q=${encodeURIComponent(explanationPrompt)}`;
+      window.open(chatGPTUrl, '_blank');
     });
   </script>
 </body>
