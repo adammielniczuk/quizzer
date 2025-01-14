@@ -6,6 +6,7 @@
   <title>Cybersecurity Quiz</title>
 
   <!-- Favicon Links -->
+  <!-- Standard favicon -->
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
   <style>
@@ -372,12 +373,6 @@
       const selectedCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]:checked');
       const allCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]');
 
-      // If user hasn't selected anything, prompt them
-      if (selectedCheckboxes.length === 0) {
-        alert("Please select at least one answer.");
-        return;
-      }
-
       // Reveal correctness by applying CSS classes
       allCheckboxes.forEach(checkbox => {
         const idx = parseInt(checkbox.value);
@@ -409,10 +404,13 @@
         else incorrectPicked++;
       });
 
-      // Safely compute fractions
+      // Fraction of correct answers chosen vs total correct
       const fractionCorrect = totalCorrect > 0 ? (correctPicked / totalCorrect) : 0;
+      // Fraction of incorrect answers chosen vs total incorrect
       const fractionIncorrect = totalIncorrect > 0 ? (incorrectPicked / totalIncorrect) : 0;
 
+      // Score for this question is fractionCorrect minus fractionIncorrect,
+      // then clamped between 0 and 1.
       let questionScore = fractionCorrect - fractionIncorrect;
       if (questionScore < 0) questionScore = 0;
       if (questionScore > 1) questionScore = 1;
