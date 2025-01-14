@@ -536,7 +536,7 @@
       let explanationPrompt = `Shortly explain and verify the correct answers.\nQuestion: ${question.text}\n\nAnswers:\n`;
       question.answers.forEach((answer, i) => {
         // For example: "1. This is an answer (correct)" or "(maybe)" or "(incorrect)"
-        explanationPrompt += `${i + 1}. ${answer.text} (${answer.correctness})\n`;
+        explanationPrompt += `${i + 1}. ${answer.text} (${answer.correctness}?)\n`;
       });
 
       // Attempt to open ChatGPT passing the prompt via ?q=
