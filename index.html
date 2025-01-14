@@ -272,7 +272,7 @@
       <button id="explainBtn" style="display: none;">Explain with ChatGPT</button>
       
       <!-- NEW BUTTON: Ask Szychowiak (hidden until after Check) -->
-      <button id="askSzychowiakBtn" style="display: none;">Ask Szychowiak</button>
+      <!-- <button id="askSzychowiakBtn" style="display: none;">Ask Szychowiak</button> -->
     </div>
 
     <!-- End Screen -->
@@ -310,7 +310,7 @@
     const singleActionBtn = document.getElementById('singleActionBtn');
     const explainBtn = document.getElementById('explainBtn');
     // NEW BUTTON:
-    const askSzychowiakBtn = document.getElementById('askSzychowiakBtn');
+    // const askSzychowiakBtn = document.getElementById('askSzychowiakBtn');
     
     // End Screen
     const endScreen = document.getElementById('endScreen');
@@ -375,7 +375,7 @@
       singleActionBtn.textContent = "Check";
       // Hide the "Explain with ChatGPT" button and "Ask Szychowiak" button until after "Check"
       explainBtn.style.display = 'none';
-      askSzychowiakBtn.style.display = 'none';
+      // askSzychowiakBtn.style.display = 'none';
 
       // Clear answers
       answersList.innerHTML = "";
@@ -491,7 +491,7 @@
 
       // ---- Make the "Explain with ChatGPT" button and "Ask Szychowiak" button visible now ----
       explainBtn.style.display = 'inline-block';
-      askSzychowiakBtn.style.display = 'inline-block';
+      // askSzychowiakBtn.style.display = 'inline-block';
 
       updateScoreDisplay();
     }
@@ -584,7 +584,7 @@
 
       // Append each answer + correctness
       question.answers.forEach((answer, i) => {
-        emailBody += `${i + 1}. ${answer.text} (${answer.correctness})\n`;
+        emailBody += `${i + 1}. ${answer.text}\n`;
       });
 
       // Encode the subject and body for a mailto link
