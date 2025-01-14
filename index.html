@@ -142,7 +142,7 @@
       font-weight: bold;
     }
 
-    /* Buttons under question */
+    /* Single action button */
     #singleActionBtn {
       background: #3498db;
       color: white;
@@ -162,20 +162,40 @@
       margin: 20px 0;
       font-size: 1.2rem;
     }
-    #finalScore {
-      margin-top: 20px;
+
+    /* -------------
+       End Screen
+       ------------- */
+    #endScreen {
+      display: none; /* hidden by default until quiz is done */
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
       text-align: center;
     }
+    #endScreen button {
+      margin-top: 15px;
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    #endScreen button:hover {
+      background: #2980b9;
+    }
+
   </style>
 </head>
 <body>
-
   <!-- App container -->
   <div class="app-container">
     
     <!-- Landing screen -->
     <div id="landingScreen">
-      <h1>Welcome to the Quiz App</h1>
+      <h1>Cybersecurity Quiz</h1>
       <p>Test yourself with randomly shuffled questions and track your score.</p>
       <button id="startQuizBtn">Start</button>
     </div>
@@ -191,7 +211,7 @@
     <!-- Quiz Container -->
     <div id="quizContainer">
       <!-- Score Display -->
-      <div id="scoreDisplay">Score: 0</div>
+      <div id="scoreDisplay">Score: 0/0</div>
       
       <!-- Question Card -->
       <div id="questionCard" class="question-card">
@@ -201,22 +221,29 @@
       
       <!-- Single Action Button (Check -> Next) -->
       <button id="singleActionBtn">Check</button>
-
-      <!-- Final Score Display -->
-      <div id="finalScore"></div>
     </div>
+
+    <!-- End Screen -->
+    <div id="endScreen">
+      <h2>Quiz Completed!</h2>
+      <p id="endMessage"></p>
+      <button id="shareResultBtn">Share your result</button>
+    </div>
+
   </div>
 
   <script>
+    // -----------------------
     // Global variables
+    // -----------------------
     let questions = [];
     let currentQuestionIndex = 0;
-    let totalScore = 0;
+    let totalScore = 0.0;       // Our sum of partial credits
+    let hasChecked = false;     // Track whether user has clicked "Check" for the current question
 
-    // We'll track whether the user has "checked" the current question
-    let hasChecked = false;
-    
+    // -----------------------
     // DOM elements
+    // -----------------------
     const landingScreen = document.getElementById('landingScreen');
     const warningModal = document.getElementById('warningModal');
     const quizContainer = document.getElementById('quizContainer');
@@ -229,7 +256,11 @@
     const answersList = document.getElementById('answersList');
     
     const singleActionBtn = document.getElementById('singleActionBtn');
-    const finalScoreDiv = document.getElementById('finalScore');
+    
+    // End Screen
+    const endScreen = document.getElementById('endScreen');
+    const endMessage = document.getElementById('endMessage');
+    const shareResultBtn = document.getElementById('shareResultBtn');
 
     // -----------------------
     // Fisher-Yates Shuffle
@@ -256,29 +287,27 @@
     });
 
     // -----------------------
-    // Fetch questions_en.json
+    // Fetch questions
     // -----------------------
     function loadQuestions() {
-      // IMPORTANT: This won't work if you open index.html from file://
-      // You must run a local server or host online
       fetch('questions_en.json')
         .then(response => response.json())
         .then(data => {
           questions = data;
           // Shuffle the questions
           shuffleArray(questions);
-          // Shuffle answers for each question
+          // Shuffle answers in each question
           questions.forEach(q => shuffleArray(q.answers));
-          // Initialize quiz
+          // Initialize quiz state
           currentQuestionIndex = 0;
-          totalScore = 0;
+          totalScore = 0.0;
           hasChecked = false;
-          scoreDisplay.textContent = `Score: ${totalScore.toFixed(2)}`;
+          updateScoreDisplay();
           showQuestion();
         })
         .catch(error => {
           console.error("Error loading questions:", error);
-          alert("Could not load questions. Make sure you are running this through a local or remote web server. Check console for details.");
+          alert("Could not load questions. Make sure you're using a local or remote web server. Check console for details.");
         });
     }
 
@@ -286,15 +315,15 @@
     // Show a Question
     // -----------------------
     function showQuestion() {
-      finalScoreDiv.textContent = ""; // clear final score if any
-      const question = questions[currentQuestionIndex];
-
-      // Reset hasChecked for new question
+      // Reset hasChecked for this new question
       hasChecked = false;
       singleActionBtn.textContent = "Check";
 
-      questionText.textContent = `Q${currentQuestionIndex + 1}: ${question.text}`;
+      // Clear answers
       answersList.innerHTML = "";
+      
+      const question = questions[currentQuestionIndex];
+      questionText.textContent = `Q${currentQuestionIndex + 1}: ${question.text}`;
 
       // Render each answer as a checkbox
       question.answers.forEach((answer, index) => {
@@ -314,34 +343,39 @@
         li.appendChild(label);
         answersList.appendChild(li);
       });
+
+      updateScoreDisplay();
     }
 
     // -----------------------
-    // Handle "Check" or "Next"
+    // Single button: Check or Next
     // -----------------------
     singleActionBtn.addEventListener('click', () => {
       if (!hasChecked) {
         // If we haven't checked yet, do the "Check" logic
         checkAnswers();
       } else {
-        // If we already checked, do the "Next" logic
+        // If we've already checked, do the "Next" logic
         nextQuestion();
       }
     });
 
+    // -----------------------
+    // Check Answers Logic
+    // -----------------------
     function checkAnswers() {
       const question = questions[currentQuestionIndex];
       const selectedCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]:checked');
       const allCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]');
 
-      // If user hasn't selected anything, do nothing
+      // If user hasn't selected anything, prompt them
       if (selectedCheckboxes.length === 0) {
         alert("Please select at least one answer.");
         return;
       }
 
-      // 1) Reveal correctness with styles
-      allCheckboxes.forEach((checkbox) => {
+      // Reveal correctness by applying CSS classes
+      allCheckboxes.forEach(checkbox => {
         const idx = parseInt(checkbox.value);
         const li = checkbox.parentElement;
         const correctness = question.answers[idx].correctness;
@@ -351,16 +385,16 @@
         } else {
           li.classList.add('incorrect');
         }
-        // Disable the checkbox after we check
+
+        // Disable checkboxes so user can't change them after checking
         checkbox.disabled = true;
       });
 
-      // 2) Calculate partial credit
-      //    Score for this question = (# of correct picks / total correct) - (# of incorrect picks / total incorrect)
-      //    Then clamp it between 0 and 1.
+      // Calculate partial credit for this question
       const totalCorrect = question.answers.filter(a => a.correctness === 'correct').length;
       const totalIncorrect = question.answers.filter(a => a.correctness === 'incorrect').length;
 
+      // Count how many correct/incorrect user picked
       let correctPicked = 0;
       let incorrectPicked = 0;
 
@@ -371,33 +405,77 @@
         else incorrectPicked++;
       });
 
-      let questionScore = (correctPicked / totalCorrect) - (incorrectPicked / totalIncorrect);
+      // Safely compute fractions
+      const fractionCorrect = totalCorrect > 0 ? (correctPicked / totalCorrect) : 0;
+      const fractionIncorrect = totalIncorrect > 0 ? (incorrectPicked / totalIncorrect) : 0;
+
+      let questionScore = fractionCorrect - fractionIncorrect;
       if (questionScore < 0) questionScore = 0;
       if (questionScore > 1) questionScore = 1;
 
+      // Add this partial credit to total score
       totalScore += questionScore;
-      scoreDisplay.textContent = `Score: ${totalScore.toFixed(2)}`;
 
-      // Mark that we've checked answers
+      // Mark that we've checked this question
       hasChecked = true;
-      // Change button text to "Next"
       singleActionBtn.textContent = "Next";
+
+      updateScoreDisplay();
     }
 
+    // -----------------------
+    // Next Question Logic
+    // -----------------------
     function nextQuestion() {
       currentQuestionIndex++;
       if (currentQuestionIndex < questions.length) {
         showQuestion();
       } else {
-        // Show final score
-        finalScoreDiv.innerHTML = `
-          <h2>Quiz Completed!</h2>
-          <p>Your total score is: <strong>${totalScore.toFixed(2)}</strong> / ${questions.length}</p>
-        `;
-        // Optionally, hide the singleActionBtn if you want
-        singleActionBtn.style.display = "none";
+        // All questions completed
+        showEndScreen();
       }
     }
+
+    // -----------------------
+    // Show End Screen
+    // -----------------------
+    function showEndScreen() {
+      // Hide quiz container
+      quizContainer.style.display = "none";
+      // Show end screen
+      endScreen.style.display = "block";
+      // Display final score
+      endMessage.innerHTML = `
+        Your total score is: <strong>${totalScore.toFixed(2)}</strong> / ${questions.length}
+      `;
+    }
+
+    // -----------------------
+    // Update Score Display
+    // -----------------------
+    function updateScoreDisplay() {
+      const completedQuestions = hasChecked ? (currentQuestionIndex + 1) : currentQuestionIndex;
+      scoreDisplay.textContent = `Score: ${totalScore.toFixed(2)}/${completedQuestions}`;
+    }
+
+    // -----------------------
+    // Share Result Button
+    // -----------------------
+    shareResultBtn.addEventListener('click', () => {
+      const finalScore = `${totalScore.toFixed(2)}/${questions.length}`;
+      const shareText = `I scored ${finalScore} on the Cybersecurity quiz!`;
+
+      if (navigator.share) {
+          // Use Web Share API to share only the text
+          navigator.share({
+          text: shareText
+          })
+          .catch((error) => console.log('Share failed', error));
+      } else {
+          // Fallback: simply alert the user
+          alert(shareText);
+      }
+    });
   </script>
 </body>
 </html>
