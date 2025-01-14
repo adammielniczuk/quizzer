@@ -373,6 +373,12 @@
       const selectedCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]:checked');
       const allCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]');
 
+      // If user hasn't selected anything, prompt them
+      if (selectedCheckboxes.length === 0) {
+        alert("Please select at least one answer.");
+        return;
+      }
+
       // Reveal correctness by applying CSS classes
       allCheckboxes.forEach(checkbox => {
         const idx = parseInt(checkbox.value);
@@ -409,9 +415,17 @@
       // Fraction of incorrect answers chosen vs total incorrect
       const fractionIncorrect = totalIncorrect > 0 ? (incorrectPicked / totalIncorrect) : 0;
 
-      // Score for this question is fractionCorrect minus fractionIncorrect,
-      // then clamped between 0 and 1.
+      // Score for this question is fractionCorrect minus fractionIncorrect
       let questionScore = fractionCorrect - fractionIncorrect;
+
+      // ----- Special Case -----
+      // If there is only ONE correct answer and user chooses ANY incorrect option(s),
+      // the score is forced to 0.
+      if (totalCorrect === 1 && incorrectPicked > 0) {
+        questionScore = 0;
+      }
+
+      // Clamp the score between 0 and 1
       if (questionScore < 0) questionScore = 0;
       if (questionScore > 1) questionScore = 1;
 
@@ -456,6 +470,7 @@
     // Update Score Display
     // -----------------------
     function updateScoreDisplay() {
+      // 'completedQuestions' is how many questions we've checked so far
       const completedQuestions = hasChecked ? (currentQuestionIndex + 1) : currentQuestionIndex;
       scoreDisplay.textContent = `Score: ${totalScore.toFixed(2)}/${completedQuestions}`;
     }
@@ -470,7 +485,7 @@
       if (navigator.share) {
           // Use Web Share API to share only the text
           navigator.share({
-          text: shareText
+            text: shareText
           })
           .catch((error) => console.log('Share failed', error));
       } else {

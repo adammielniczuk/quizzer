@@ -8416,24 +8416,6 @@
         ]
     },
     {
-        "number": 379,
-        "text": "This is the end because:",
-        "answers": [
-            {
-                "text": "I have high ground",
-                "correctness": "maybe"
-            },
-            {
-                "text": "there is nothing left,",
-                "correctness": "incorrect"
-            },
-            {
-                "text": "we sweeten tea to have a reason to stir 1. The EFS certificate used in NTFS contains: \u25ef the key with which files are encrypted \u25ef the key with which files are decrypted \u25ef the user's public key, used to decrypt FEK keys \u25ef the user's public key, used to encrypt FEK keys 2. Which statements about user account lockout in Windows are false: \u25ef the login attempt counter is reset after each failed login \u25ef the login attempt counter is reset automatically after a specified time \u25ef the login attempt counter can be reset by the administrator \u25ef the login attempt counter is reset after each successful login 3. Resources of the MS Windows operating system shared via SMB: \u25ef are accessible remotely only to those users who have a local account in the system \u25ef are called ports \u25ef always require authentication (password entry) for remote access \u25ef may have limited read and/or write access only for specified users 4. User U in the Linux system belonging to group G1 does not have an entry on the ACL list for resource O in the file system. However, group G1 on the ACL list for resource O has been granted r and x rights, and the default permissions of that resource are rwx. What effective permissions to O does U currently have? (U is not the owner of O and does not belong to the resource O group, mask=rwx) \u25ef only r \u25ef rx \u25ef rwx \u25ef none 5. What can a user do with the ulimit command? \u25ef increase their file access permissions \u25ef block the ability to create a core dump of the process memory to a file (core dump) \u25ef limit the number of simultaneously open files \u25ef limit access permissions to their files for other users 6. What cryptographic mechanisms are necessary to ensure non-repudiation in the context of email? \u25ef the message must be electronically signed with the sender's public key \u25ef the message must be electronically signed with the sender's private key \u25ef a certificate certified by a trusted CA must be attached to the message \u25ef the message must be encrypted with a symmetric key known only to the parties of communication 7. The virtualization mechanism for access to critical components of the Windows system: \u25ef applies to some objects in the system registry \u25ef can be enabled/disabled by the user for their own processes \u25ef applies to some objects in the file system \u25ef is used only for 64-bit applications 8. Which ACE entries on the POSIX ACL list does the mask refer to: \u25ef the owner of the object \u25ef the group (default) of the file (from base ACE) \u25ef each explicitly entered group \u25ef all users not explicitly entered but belonging to any explicitly entered group 9. List all the necessary conditions for verifying the digital signature of an S/MIME message: \u25ef prior transfer of the recipient's public key to the sender \u25ef the recipient's access to the CA's public key certificate that certified the sender's public key \u25ef prior transfer of the sender's public key to the recipient \u25ef correct key exchange between the sender and recipient using the Diffie-Hellman method",
-                "correctness": "incorrect"
-            }
-        ]
-    },
-    {
         "number": 312,
         "text": "How does authentication work in the rlogin service",
         "answers": [
