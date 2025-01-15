@@ -752,7 +752,7 @@
     explainBtn.addEventListener('click', () => {
       const question = questions[currentQuestionIndex];
       
-      let explanationPrompt = `Shortly explain and verify the correct answers.\nQuestion: ${question.text}\n\nAnswers:\n`;
+      let explanationPrompt = `Please verify the accuracy of the answers and provide a brief explanation for each.\nQuestion: ${question.text}\n\nAnswers:\n`;
       question.answers.forEach((answer, i) => {
         explanationPrompt += `${i + 1}. ${answer.text} (${answer.correctness}?)\n`;
       });
