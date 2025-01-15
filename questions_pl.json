@@ -2511,7 +2511,7 @@
     },
     {
         "number": 108,
-        "text": "Następująca reguła filtracji zapory sieciowej:",
+        "text": "(Skip) Następująca reguła filtracji zapory sieciowej:",
         "answers": [
             {
                 "text": "blokuje wszelkie połączenia nawiązywane z serwera www o dowolnym adresie",
@@ -2957,7 +2957,7 @@
     },
     {
         "number": 129,
-        "text": "Następująca reguła filtracji zapory sieciowej:",
+        "text": "(Skip) Następująca reguła filtracji zapory sieciowej:",
         "answers": [
             {
                 "text": "blokuje wszelkie połączenia nawiązywane z serwera www o dowolnym adresie",

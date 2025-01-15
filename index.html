@@ -568,7 +568,7 @@
       answersList.innerHTML = "";
 
       const question = questions[currentQuestionIndex];
-      questionText.textContent = `Q${currentQuestionIndex + 1}: ${question.text}`;
+      questionText.innerHTML = `Q${currentQuestionIndex + 1}: ${question.text}&ensp;<i>(id:${question.number})</i>`;
 
       // Render each answer as a checkbox
       question.answers.forEach((answer, index) => {

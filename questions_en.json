@@ -1,7 +1,7 @@
 [
     {
         "number": 1,
-        "text": "VPN networks can be built using: [1/1]",
+        "text": "VPN networks can be built using:",
         "answers": [
             {
                 "text": "IDS",
@@ -23,7 +23,7 @@
     },
     {
         "number": 2,
-        "text": "A Windows user, being an administrator, after logging into the system: [1/1]",
+        "text": "A Windows user, being an administrator, after logging into the system:",
         "answers": [
             {
                 "text": "will receive a full permission token and will always use the full token",
@@ -83,7 +83,7 @@
     },
     {
         "number": 4,
-        "text": "The DNSsec service: [1/1]",
+        "text": "The DNSsec service: ",
         "answers": [
             {
                 "text": "uses IPsec to tunnel DNS queries and responses",
@@ -105,7 +105,7 @@
     },
     {
         "number": 5,
-        "text": "Which authentication methods are used by the HTTP/1.1 protocol [1/1]",
+        "text": "Which authentication methods are used by the HTTP/1.1 protocol ",
         "answers": [
             {
                 "text": "only the use of a one-way hash function",
@@ -127,7 +127,7 @@
     },
     {
         "number": 6,
-        "text": "Which components of the Windows operating system can use hardware virtualization to enhance system security: [1/1]",
+        "text": "Which components of the Windows operating system can use hardware virtualization to enhance system security: ",
         "answers": [
             {
                 "text": "Alpine docker containers",
@@ -149,7 +149,7 @@
     },
     {
         "number": 7,
-        "text": "Indicate mechanisms that protect against buffer overflow attacks, among others: [1/1]",
+        "text": "Indicate mechanisms that protect against buffer overflow attacks, among others: ",
         "answers": [
             {
                 "text": "using Structured Exception Handling and Vectored Exception Handling",
@@ -171,7 +171,7 @@
     },
     {
         "number": 8,
-        "text": "The two-factor authentication (2FA) mechanism: [1/1]",
+        "text": "The two-factor authentication (2FA) mechanism: ",
         "answers": [
             {
                 "text": "requires the use of 2 separate authentication operations (and data)",
@@ -193,7 +193,7 @@
     },
     {
         "number": 9,
-        "text": "The Kerberos system offers (select all correct options): [1/1]",
+        "text": "The Kerberos system offers (select all correct options): ",
         "answers": [
             {
                 "text": "cryptographic authentication of users within the domain",
@@ -215,7 +215,7 @@
     },
     {
         "number": 10,
-        "text": "Computer-Fortress: [1/1]",
+        "text": "Computer-Fortress: ",
         "answers": [
             {
                 "text": "allows communication to pass only through proxy services",
@@ -237,7 +237,7 @@
     },
     {
         "number": 11,
-        "text": "Which hardware components serve (among others) for the secure storage of cryptographic material: [1/1]",
+        "text": "Which hardware components serve (among others) for the secure storage of cryptographic material: ",
         "answers": [
             {
                 "text": "IEEE 1609.2",
@@ -259,7 +259,7 @@
     },
     {
         "number": 12,
-        "text": "The CAP access control model: [1/1]",
+        "text": "The CAP access control model: ",
         "answers": [
             {
                 "text": "is used in MIC (Mandatory Integrity Control) systems",
@@ -281,7 +281,7 @@
     },
     {
         "number": 13,
-        "text": "The MAC access control model prohibits a subject with label P: [1/1]",
+        "text": "The MAC access control model prohibits a subject with label P: ",
         "answers": [
             {
                 "text": "reading an object with a lower label than P",
@@ -299,7 +299,7 @@
     },
     {
         "number": 14,
-        "text": "Indicate protocols and standards that authenticate access to the network, operating between the network client (computer) and the access point (server): [1/1]",
+        "text": "Indicate protocols and standards that authenticate access to the network, operating between the network client (computer) and the access point (server): ",
         "answers": [
             {
                 "text": "IEEE 802.1X",
@@ -321,7 +321,7 @@
     },
     {
         "number": 15,
-        "text": "The Kerberos protocol: [1/1]",
+        "text": "The Kerberos protocol: ",
         "answers": [
             {
                 "text": "allows achieving mutual authentication of the client of the network service and the server of that service",
@@ -355,7 +355,7 @@
     },
     {
         "number": 16,
-        "text": "Indicate possible correct responses to the detection of buffer overflow (in the stack segment) that enable system security: [1/1]",
+        "text": "Indicate possible correct responses to the detection of buffer overflow (in the stack segment) that enable system security:",
         "answers": [
             {
                 "text": "reinitializing the buffer with a default value",
@@ -377,7 +377,7 @@
     },
     {
         "number": 17,
-        "text": "NAC (Network Access Control) systems: [0.5/1]",
+        "text": "NAC (Network Access Control) systems:",
         "answers": [
             {
                 "text": "authenticate network stations before allowing them into the local network",
@@ -399,7 +399,7 @@
     },
     {
         "number": 18,
-        "text": "The SSL/TLS protocol: [1/1]",
+        "text": "The SSL/TLS protocol: ",
         "answers": [
             {
                 "text": "allows cryptographic authentication of both the client and the server",
@@ -437,7 +437,7 @@
     },
     {
         "number": 19,
-        "text": "Indicate true statements regarding the Application Layer Gateway: [1/1]",
+        "text": "Indicate true statements regarding the Application Layer Gateway: ",
         "answers": [
             {
                 "text": "mediates communication only at the application layer",
@@ -459,7 +459,7 @@
     },
     {
         "number": 20,
-        "text": "Which of the following cryptographic algorithms can be practically used to encrypt the content of an email: [1/1]",
+        "text": "Which of the following cryptographic algorithms can be practically used to encrypt the content of an email: ",
         "answers": [
             {
                 "text": "AES",
@@ -613,7 +613,7 @@
     },
     {
         "number": 27,
-        "text": "Which of the following features pertain to asymmetric encryption: [1/1]",
+        "text": "Which of the following features pertain to asymmetric encryption: ",
         "answers": [
             {
                 "text": "resistance to collisions",
@@ -631,7 +631,7 @@
     },
     {
         "number": 28,
-        "text": "Which of the following features pertain to symmetric encryption: [1/1]",
+        "text": "Which of the following features pertain to symmetric encryption:",
         "answers": [
             {
                 "text": "resistance to collisions",
@@ -649,7 +649,7 @@
     },
     {
         "number": 29,
-        "text": "Which of the following mechanisms allow temporary access to different permissions than currently held by the user in the operating system: [0.7/1]",
+        "text": "Which of the following mechanisms allow temporary access to different permissions than currently held by the user in the operating system:",
         "answers": [
             {
                 "text": "Windows UAC",
@@ -693,7 +693,7 @@
     },
     {
         "number": 31,
-        "text": "Indicate the characteristic features of a buffer overflow attack (in the stack segment): [1/1]",
+        "text": "Indicate the characteristic features of a buffer overflow attack (in the stack segment): ",
         "answers": [
             {
                 "text": "the goal of the overflow is to overwrite the return address in the function frame currently on the stack",
@@ -759,7 +759,7 @@
     },
     {
         "number": 34,
-        "text": "Indicate true statements regarding the HTTP protocol: [0.5/1]",
+        "text": "Indicate true statements regarding the HTTP protocol:",
         "answers": [
             {
                 "text": "HTTP from version 1.1 authenticates not only the client but also the server",
@@ -803,7 +803,7 @@
     },
     {
         "number": 37,
-        "text": "Indicate the features of POSIX CAP permissions: [1/1]",
+        "text": "Indicate the features of POSIX CAP permissions:",
         "answers": [
             {
                 "text": "can be assigned to users",
@@ -847,7 +847,7 @@
     },
     {
         "number": 39,
-        "text": "Which of the following features correctly describe the IKE protocol? [1/1]",
+        "text": "Which of the following features correctly describe the IKE protocol?",
         "answers": [
             {
                 "text": "enables changing encryption keys for the IPsec ESP protocol",
@@ -885,7 +885,7 @@
     },
     {
         "number": 40,
-        "text": "OpenVPN tunnels: [1/1]",
+        "text": "OpenVPN tunnels:",
         "answers": [
             {
                 "text": "use the ESP protocol to encrypt traffic",
@@ -929,7 +929,7 @@
     },
     {
         "number": 42,
-        "text": "The ulimit command: [1/1]",
+        "text": "The ulimit command:",
         "answers": [
             {
                 "text": "determines whether memory space dumps (images) of processes can be created",
@@ -951,7 +951,7 @@
     },
     {
         "number": 43,
-        "text": "What is the difference between twist and spawn in the tcp wrapper policy (e.g., in the hosts.allow file)? [1/1]",
+        "text": "What is the difference between twist and spawn in the tcp wrapper policy (e.g., in the hosts.allow file)?",
         "answers": [
             {
                 "text": "spawn is used to log messages or send mail, while twist sends a message and denies access to the service",
@@ -973,7 +973,7 @@
     },
     {
         "number": 44,
-        "text": "What does the IPC$ share mean and what is it used for? [1/1]",
+        "text": "What does the IPC$ share mean and what is it used for?",
         "answers": [
             {
                 "text": "it is a share used in Windows for remote procedure calls (RPC)",
@@ -2517,7 +2517,7 @@
     },
     {
         "number": 108,
-        "text": "The following firewall filtering rule:",
+        "text": "(Skip) The following firewall filtering rule:",
         "answers": [
             {
                 "text": "blocks all connections initiated from a web server with any address",
@@ -2963,7 +2963,7 @@
     },
     {
         "number": 129,
-        "text": "The following firewall filtering rule:",
+        "text": "(Skip) The following firewall filtering rule:",
         "answers": [
             {
                 "text": "blocks all connections initiated from a web server with any address",
