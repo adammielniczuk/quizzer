@@ -9207,7 +9207,7 @@
             },
             {
                 "text": "using the Web of Trust method, where PGP users sign each other's keys",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "by verifying the CA's signature on the user's key",

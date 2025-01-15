@@ -9223,7 +9223,7 @@
             },
             {
                 "text": "metodą Web of Trust, w której użytkownicy PGP podpisują sobie wzajemnie klucze",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "poprzez weryfikację podpisu urzędu CA pod kluczem użytkownika",
