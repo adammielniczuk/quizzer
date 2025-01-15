@@ -6756,10 +6756,6 @@
         "text": "Indicate possible methods of authenticating the IPsec tunnel in Windows:",
         "answers": [
             {
-                "text": "Indicate possible methods of authenticating the IPsec tunnel in Windows:",
-                "correctness": "incorrect"
-            },
-            {
                 "text": "X.509 certificate",
                 "correctness": "correct"
             },

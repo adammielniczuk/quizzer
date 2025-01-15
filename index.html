@@ -63,6 +63,28 @@
       background: #2980b9;
     }
 
+    /* Language Selection */
+    #languageSelection {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .flag-button {
+      width: 60px;
+      height: 40px;
+      border: 2px solid #000;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border 0.3s;
+    }
+    .flag-button:hover {
+      border: 3px solid #3498db;
+    }
+    .flag-selected {
+      border: 4px solid #3498db;
+    }
+
     /* ---------------
        Warning (Modal)
        --------------- */
@@ -272,7 +294,15 @@
         <span style="color: #f1c40f;"><b>Yellow</b></span><b> = Maybe,</b> 
         <span style="color: #c62828;"><b>Red</b></span><b> = Incorrect</b>
       </p>
-      <button id="startQuizBtn">Start</button>
+
+      <!-- Language Selection -->
+      <div id="languageSelection">
+        <img src="https://flagcdn.com/w80/gb.png" alt="English" class="flag-button" id="flag-en" title="English">
+        <img src="https://flagcdn.com/w80/pl.png" alt="Polish" class="flag-button" id="flag-pl" title="Polski">
+      </div>
+      <p id="languageError" style="color: red; margin-top: 10px; display: none;">Please select a language to continue.</p>
+
+      <button id="startQuizBtn">Start Quiz</button>
     </div>
 
     <!-- Warning Modal -->
@@ -296,8 +326,8 @@
 
       <!-- Single Action Button (Check -> Next) + Explain with ChatGPT -->
       <div style="text-align:center;">
-        <button id="singleActionBtn">Check</button>
-        <button id="explainBtn">Explain with ChatGPT</button>
+        <button id="singleActionBtn">Check answers</button>
+        <button id="explainBtn">Ask ChatGPT</button>
       </div>
 
       <!-- Rate Proposed Answers -->
@@ -328,6 +358,7 @@
     let currentQuestionIndex = 0;
     let totalScore = 0.0;       // Our sum of partial credits
     let hasChecked = false;     // Track whether user has clicked "Check" for the current question
+    let selectedLanguage = 'en'; // 'en' or 'pl' (default to 'en')
 
     // -----------------------
     // DOM elements
@@ -356,6 +387,11 @@
     const endScreen = document.getElementById('endScreen');
     const endMessage = document.getElementById('endMessage');
     const shareResultBtn = document.getElementById('shareResultBtn');
+
+    // Language Selection Elements
+    const flagEn = document.getElementById('flag-en');
+    const flagPl = document.getElementById('flag-pl');
+    const languageError = document.getElementById('languageError');
 
     // ------------------------------------------------
     // NEW: using Counter API to track events
@@ -446,9 +482,41 @@
     }
 
     // -----------------------
+    // Language Selection
+    // -----------------------
+    function selectLanguage(lang) {
+      selectedLanguage = lang;
+      // Highlight selected flag
+      if (lang === 'en') {
+        flagEn.classList.add('flag-selected');
+        flagPl.classList.remove('flag-selected');
+      } else if (lang === 'pl') {
+        flagPl.classList.add('flag-selected');
+        flagEn.classList.remove('flag-selected');
+      }
+      // Hide error message if any
+      languageError.style.display = 'none';
+    }
+
+    flagEn.addEventListener('click', () => selectLanguage('en'));
+    flagPl.addEventListener('click', () => selectLanguage('pl'));
+
+    // -----------------------
+    // Initialize Default Language
+    // -----------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      // Set English as default
+      selectLanguage('en');
+    });
+
+    // -----------------------
     // Start Quiz Flow
     // -----------------------
     startQuizBtn.addEventListener('click', () => {
+      if (!selectedLanguage) {
+        languageError.style.display = 'block';
+        return;
+      }
       warningModal.style.display = 'flex';
     });
 
@@ -463,7 +531,8 @@
     // Fetch questions
     // -----------------------
     function loadQuestions() {
-      fetch('questions_en.json')
+      const questionsFile = selectedLanguage === 'pl' ? 'questions_pl.json' : 'questions_en.json';
+      fetch(questionsFile)
         .then(response => response.json())
         .then(data => {
           questions = data;
@@ -490,7 +559,7 @@
     function showQuestion() {
       // Reset hasChecked for this new question
       hasChecked = false;
-      singleActionBtn.textContent = "Check";
+      singleActionBtn.textContent = "Check answers";
       // Hide the "Explain with ChatGPT" button and rating area until after "Check"
       explainBtn.style.display = 'none';
       rateAnswersContainer.style.display = 'none';
@@ -620,7 +689,7 @@
 
       // Now user has checked
       hasChecked = true;
-      singleActionBtn.textContent = "Next";
+      singleActionBtn.textContent = "Next question";
       
       // Show the "Explain with ChatGPT" button and rating area
       explainBtn.style.display = 'inline-block';
