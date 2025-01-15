@@ -5473,11 +5473,11 @@
             },
             {
                 "text": "serwer przesyła komunikat ServerHello z opcjonalnym losowym zawołaniem",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "klient odsyła podpisane zawołanie do serwera tylko jeśli serwer zadał uwierzytelnienia klienta",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -9249,7 +9249,7 @@
             },
             {
                 "text": "UAC blokuje możliwość instalacji programów przez administratora",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "zmiana istotnych gałęzi rejestru systemu wymaga świadomej reakcji uprawnionego użytkownika",

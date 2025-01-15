@@ -5475,11 +5475,11 @@
             },
             {
                 "text": "the server sends a ServerHello message with an optional random challenge",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "the client sends a signed challenge to the server only if the server requested client authentication",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -9233,7 +9233,7 @@
             },
             {
                 "text": "UAC blocks the ability to install programs by the administrator",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "changing significant branches of the system registry requires a conscious response from an authorized user",
