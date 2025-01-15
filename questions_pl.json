@@ -8371,11 +8371,11 @@
             },
             {
                 "text": "zawsze",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "jesli zostanie odpowiednio skonfigurowany",
-                "correctness": "incorrect"
+                "correctness": "correct"
             }
         ]
     },
