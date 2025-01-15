@@ -758,7 +758,7 @@
       });
 
       // Example ChatGPT link
-      const chatGPTUrl = `https://chat.openai.com/?q=${encodeURIComponent(explanationPrompt)}`;
+      const chatGPTUrl = `https://chat.openai.com/?temporary-chat=true&model=gpt-4o&hints=search&q=${encodeURIComponent(explanationPrompt)}`;
       window.open(chatGPTUrl, '_blank');
 
       // Track GPT clicks

@@ -3772,10 +3772,6 @@
             {
                 "text": "Granted Permissions List",
                 "correctness": "incorrect"
-            },
-            {
-                "text": "Access Control List",
-                "correctness": "correct"
             }
         ]
     },
