@@ -4234,7 +4234,15 @@
                 "correctness": "correct"
             },
             {
-                "text": "RC2 k) AES l) none of the above",
+                "text": "RC2",
+                "correctness": "correct"
+            },
+            {
+                "text": "AES",
+                "correctness": "correct"
+            },
+            {
+                "text": "none of the above",
                 "correctness": "incorrect"
             }
         ]
