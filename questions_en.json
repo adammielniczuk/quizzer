@@ -3417,7 +3417,7 @@
             },
             {
                 "text": "protects against IP spoofing attacks",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "enables authentication of LAN network stations",

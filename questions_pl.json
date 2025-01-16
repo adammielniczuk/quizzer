@@ -3411,7 +3411,7 @@
             },
             {
                 "text": "chroni przed atakami IP spoofing",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "umożliwia uwierzytelnianie stanowisk sieci LAN",
