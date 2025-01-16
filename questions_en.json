@@ -1932,10 +1932,6 @@
             {
                 "text": "the read right to object p will be effectively granted if U is the owner of p",
                 "correctness": "incorrect"
-            },
-            {
-                "text": "the read right to object p will not be effectively granted",
-                "correctness": "incorrect"
             }
         ]
     },

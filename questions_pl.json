@@ -1926,10 +1926,6 @@
             {
                 "text": "prawo r do obiektu p zostanie efektywnie przyznane, o ile U jest wlascicielem p",
                 "correctness": "incorrect"
-            },
-            {
-                "text": "prawo r do obiektu p nie zostanie efektywnie przyznane",
-                "correctness": "incorrect"
             }
         ]
     },
