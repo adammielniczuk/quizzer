@@ -5939,7 +5939,7 @@
             },
             {
                 "text": "ochrona przed atakami DoS",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
