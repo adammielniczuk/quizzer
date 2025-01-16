@@ -5419,7 +5419,7 @@
         "answers": [
             {
                 "text": "armoring",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "masked nodes (shadow i-node)",

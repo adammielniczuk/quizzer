@@ -5417,7 +5417,7 @@
         "answers": [
             {
                 "text": "opancerzenie (armor)",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "zamaskowane węzły (shadow i-node)",
