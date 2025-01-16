@@ -7517,15 +7517,15 @@
         "answers": [
             {
                 "text": "point-to-point",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "client-server",
-                "correctness": "maybe"
+                "correctness": "correct"
             },
             {
                 "text": "peer-to-peer connections for each connection",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             },
             {
                 "text": "in none of the above since Vtun is very simple and does not contain any complicated architecture",

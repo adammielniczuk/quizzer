@@ -7769,15 +7769,15 @@
         "answers": [
             {
                 "text": "punkt – punkt",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "klient – serwer",
-                "correctness": "maybe"
+                "correctness": "correct"
             },
             {
                 "text": "polaczenia peer-to-peer dla kazdego polaczenia",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             },
             {
                 "text": "w zadnej z powyzszych poniewaz Vtun jest bardzo prosty i nie zawiera w sobie zadnej skomplikowanej architektury",
