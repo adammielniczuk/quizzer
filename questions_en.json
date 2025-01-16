@@ -1117,7 +1117,7 @@
             },
             {
                 "text": "only after configuring iptables to redirect traffic to the listening super server xinetd?",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -2729,7 +2729,7 @@
             },
             {
                 "text": "ARM TrustZone",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "SSL (Secure Socket Layer)",
@@ -6429,7 +6429,7 @@
         "answers": [
             {
                 "text": "(preliminary) symmetric key",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "a mechanism allowing authentication and encryption using a single key",
@@ -8657,7 +8657,7 @@
             },
             {
                 "text": "ARM TrustZone",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "TEE",

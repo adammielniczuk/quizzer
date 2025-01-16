@@ -1111,7 +1111,7 @@
             },
             {
                 "text": "dopiero po skonfigurowaniu iptables do przekierowania ruchu na port nasłuchującego superserwera xinetd?",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -2723,7 +2723,7 @@
             },
             {
                 "text": "ARM TrustZone",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "SSL (Secure Socket Layer)",
@@ -6427,7 +6427,7 @@
         "answers": [
             {
                 "text": "(wstępny) klucz symetryczny",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "mechanizm pozwalający uwierzytelniać i szyfrować za pomocą jednego klucza",
@@ -7285,7 +7285,7 @@
             },
             {
                 "text": "ARM TrustZone",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "TEE",
