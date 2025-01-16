@@ -6355,15 +6355,15 @@
         "answers": [
             {
                 "text": "rlogin",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "telnet",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "tcpd",
-                "correctness": "maybe"
+                "correctness": "incorrect"
             },
             {
                 "text": "xinetd",
@@ -6371,11 +6371,11 @@
             },
             {
                 "text": "ssh",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "rsh",
-                "correctness": "maybe"
+                "correctness": "incorrect"
             }
         ]
     },
