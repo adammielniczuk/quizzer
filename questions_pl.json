@@ -5601,7 +5601,7 @@
             },
             {
                 "text": "integrację uwierzytelniania użytkowników sieci pomiędzy systemami Windows i Linux",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "dostęp serwera usługi www (np. z systemu operacyjnego MS Windows w środowisku domenowym) do zewnętrznych źródeł danych uwierzytelniających, np. bazy danych",

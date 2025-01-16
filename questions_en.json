@@ -5603,7 +5603,7 @@
             },
             {
                 "text": "integration of user authentication between Windows and Linux systems",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "access of the web service server (e.g., from the MS Windows operating system in a domain environment) to external sources of authentication data, e.g., databases",
