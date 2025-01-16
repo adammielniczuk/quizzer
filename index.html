@@ -664,14 +664,10 @@
       // Fraction of correct answers chosen vs total correct
       const fractionCorrect = totalCorrectOrMaybe > 0 ? (correctPicked / totalCorrectOrMaybe) : 0;
       // Fraction of incorrect answers chosen vs total incorrect
-      const fractionIncorrect = totalIncorrect > 0 ? (incorrectPicked / totalIncorrect) : 0;
+      const fractionIncorrect = totalCorrectOrMaybe > 0 ? (incorrectPicked / totalCorrectOrMaybe) : 0;
 
       let questionScore = fractionCorrect - fractionIncorrect;
 
-      // If there is only 1 correct answer and user picks any incorrect, score = 0
-      if (totalCorrectOrMaybe === 1 && incorrectPicked > 0) {
-        questionScore = 0;
-      }
       // Clamp to [0, 1]
       if (questionScore < 0) questionScore = 0;
       if (questionScore > 1) questionScore = 1;
@@ -719,7 +715,7 @@
       quizContainer.style.display = "none";
       endScreen.style.display = "block";
       endMessage.innerHTML = `
-        Your total score is: <strong>${totalScore.toFixed(2)}</strong> / ${questions.length}
+        Your total score is: <strong>${totalScore === Math.floor(totalScore) ? Math.floor(totalScore) : totalScore.toFixed(2)}</strong> / ${questions.length}
       `;
     }
 
@@ -728,15 +724,15 @@
     // -----------------------
     function updateScoreDisplay() {
       const completedQuestions = hasChecked ? (currentQuestionIndex + 1) : currentQuestionIndex;
-      scoreDisplay.textContent = `Score: ${totalScore.toFixed(2)}/${completedQuestions}`;
+      scoreDisplay.textContent = `Score: ${totalScore === Math.floor(totalScore) ? Math.floor(totalScore) : totalScore.toFixed(2)}/${completedQuestions}`;
     }
 
     // -----------------------
     // Share Result
     // -----------------------
     shareResultBtn.addEventListener('click', () => {
-      const finalScore = `${totalScore.toFixed(2)}/${questions.length}`;
-      const shareText = `I scored ${finalScore} on the Cybersecurity quiz!`;
+      const finalScore = `${totalScore === Math.floor(totalScore) ? Math.floor(totalScore) : totalScore.toFixed(2)}/${questions.length}`;
+      const shareText = `I just scored ${finalScore} on the Cybersecurity quiz! Come and test your knowledge too: https://dromaniv.github.io/quizzer/`;
 
       if (navigator.share) {
         navigator.share({ text: shareText })
@@ -752,7 +748,7 @@
     explainBtn.addEventListener('click', () => {
       const question = questions[currentQuestionIndex];
       
-      let explanationPrompt = `Please verify the accuracy of the answers and provide a brief explanation for each.\nQuestion: ${question.text}\n\nAnswers:\n`;
+      let explanationPrompt = `Please verify the accuracy of the answers and provide a brief explanation for each.\n\nQuestion: ${question.text}\nAnswers:\n`;
       question.answers.forEach((answer, i) => {
         explanationPrompt += `${i + 1}. ${answer.text} (${answer.correctness}?)\n`;
       });
