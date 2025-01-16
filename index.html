@@ -302,6 +302,12 @@
       </div>
       <p id="languageError" style="color: red; margin-top: 10px; display: none;">Please select a language to continue.</p>
 
+      <!-- Dropout Toggle (new) -->
+      <label style="display:block;margin-top:15px;">
+        <input type="checkbox" id="dropoutToggle" />
+        <i>Remove 1/4th of answers at random<br>(may leave no correct answers)</i>
+      </label>
+
       <button id="startQuizBtn">Start Quiz</button>
     </div>
 
@@ -356,9 +362,13 @@
     // -----------------------
     let questions = [];
     let currentQuestionIndex = 0;
-    let totalScore = 0.0;       // Our sum of partial credits
-    let hasChecked = false;     // Track whether user has clicked "Check" for the current question
-    let selectedLanguage = 'en'; // 'en' or 'pl' (default to 'en')
+    let totalScore = 0.0;           // Our sum of partial credits
+    let hasChecked = false;         // Track whether user has clicked "Check"
+    let selectedLanguage = 'en';    // 'en' or 'pl' (default to 'en')
+    let enableDropout = false;      // NEW: read from the checkbox
+
+    // We store the subset of answers shown to the user so we can score properly
+    let currentRenderedAnswers = [];
 
     // -----------------------
     // DOM elements
@@ -392,6 +402,9 @@
     const flagEn = document.getElementById('flag-en');
     const flagPl = document.getElementById('flag-pl');
     const languageError = document.getElementById('languageError');
+
+    // Dropout Toggle
+    const dropoutToggle = document.getElementById('dropoutToggle');
 
     // ------------------------------------------------
     // NEW: using Counter API to track events
@@ -513,10 +526,15 @@
     // Start Quiz Flow
     // -----------------------
     startQuizBtn.addEventListener('click', () => {
+      // 1) Check if language is selected
       if (!selectedLanguage) {
         languageError.style.display = 'block';
         return;
       }
+      // 2) Read the dropout toggle value
+      enableDropout = dropoutToggle.checked;
+      
+      // Show warning
       warningModal.style.display = 'flex';
     });
 
@@ -570,8 +588,23 @@
       const question = questions[currentQuestionIndex];
       questionText.innerHTML = `Q${currentQuestionIndex + 1}: ${question.text}&ensp;<i>(id:${question.number})</i>`;
 
-      // Render each answer as a checkbox
-      question.answers.forEach((answer, index) => {
+      // Copy all answers for potential dropout
+      let questionAnswers = [...question.answers];
+
+      // If dropout is enabled, remove 1/4 of the answers at random
+      if (enableDropout) {
+        const dropoutCount = Math.floor(questionAnswers.length / 4);
+        for (let i = 0; i < dropoutCount; i++) {
+          const randIndex = Math.floor(Math.random() * questionAnswers.length);
+          questionAnswers.splice(randIndex, 1);
+        }
+      }
+
+      // Store the final answers that will be rendered
+      currentRenderedAnswers = questionAnswers;
+
+      // Render the checkboxes
+      currentRenderedAnswers.forEach((answer, index) => {
         const li = document.createElement("li");
         
         const checkbox = document.createElement("input");
@@ -627,10 +660,9 @@
       const selectedCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]:checked');
       const allCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]');
 
-      // Reveal correctness
-      allCheckboxes.forEach(checkbox => {
-        const idx = parseInt(checkbox.value);
-        const correctness = question.answers[idx].correctness;
+      // Reveal correctness among the answers that were actually shown
+      allCheckboxes.forEach((checkbox, i) => {
+        const correctness = currentRenderedAnswers[i].correctness;
         
         if (correctness === 'correct') {
           checkbox.parentElement.classList.add('correct');
@@ -645,15 +677,15 @@
       });
 
       // --- SCORING ---
-      const totalCorrectOrMaybe = question.answers.filter(a => a.correctness === 'correct' || a.correctness === 'maybe').length;
-      const totalIncorrect = question.answers.filter(a => a.correctness === 'incorrect').length;
+      // We only score among the subset of answers shown
+      const totalCorrectOrMaybe = currentRenderedAnswers.filter(a => a.correctness === 'correct' || a.correctness === 'maybe').length;
 
       let correctPicked = 0;
       let incorrectPicked = 0;
 
       selectedCheckboxes.forEach(cb => {
         const idx = parseInt(cb.value);
-        const correctness = question.answers[idx].correctness;
+        const correctness = currentRenderedAnswers[idx].correctness;
         if (correctness === 'correct' || correctness === 'maybe') {
           correctPicked++;
         } else {
@@ -661,9 +693,9 @@
         }
       });
 
-      // Fraction of correct answers chosen vs total correct
+      // Fraction of correct answers chosen vs total correct (in the displayed subset)
       const fractionCorrect = totalCorrectOrMaybe > 0 ? (correctPicked / totalCorrectOrMaybe) : 0;
-      // Fraction of incorrect answers chosen vs total incorrect
+      // We subtract a penalty based on how many incorrect we picked relative to total correct
       const fractionIncorrect = totalCorrectOrMaybe > 0 ? (incorrectPicked / totalCorrectOrMaybe) : 0;
 
       let questionScore = fractionCorrect - fractionIncorrect;
