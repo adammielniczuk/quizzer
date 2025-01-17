@@ -563,7 +563,7 @@
             },
             {
                 "text": "wirtualizacja systemu operacyjnego",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
@@ -5101,11 +5101,11 @@
             },
             {
                 "text": "64b",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "192b",
-                "correctness": "incorrect"
+                "correctness": "correct"
             }
         ]
     },

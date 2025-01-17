@@ -81,5 +81,11 @@ def main():
         print(f"Question {item['number']}: {item['text']}")
         print(f"Likes: {item['likes']} | Dislikes: {item['dislikes']}\n")
 
+    # Display sum of likes and dislikes
+    likes = sum([item["likes"] for item in results])
+    dislikes = sum([item["dislikes"] for item in results])
+    print(f"Total Likes: {likes}")
+    print(f"Total Dislikes: {dislikes}")
+
 if __name__ == "__main__":
     main()

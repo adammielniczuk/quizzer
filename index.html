@@ -269,8 +269,6 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 1rem;
-      margin-right: 10px;
-      margin-left: 10px;
       display: none;
     }
     #explainBtn:hover {
@@ -360,7 +358,6 @@
       background: var(--checkbox-bg);
       cursor: pointer;
       position: relative;
-      margin-right: 10px;
       transition: all 0.2s ease;
     }
 
@@ -406,6 +403,22 @@
       flex: 1;
       padding-left: 8px;
     }
+
+    /* --------- Added Styles Below --------- */
+
+    /* Add space between adjacent buttons */
+    button + button {
+      margin-left: 10px; /* Adjust the value as needed for desired spacing */
+    }
+
+    /* Reduce vertical space between answers */
+    .answers li {
+      margin: 4px 0; /* Reduced from 8px 0 to 4px 0 */
+      padding: 6px 12px; /* Optional: reduce padding for tighter spacing */
+    }
+
+    /* --------- End of Added Styles --------- */
+
   </style>
 </head>
 <body>
@@ -541,8 +554,6 @@
     const namespace = 'putCybersecurityQuiz';  // Unique namespace
     
 
-
-    
     /**
      * trackEvent(action, details)
      * Our event -> multiple "counter up" calls, depending on what we want to track.
