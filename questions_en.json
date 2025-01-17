@@ -5103,11 +5103,11 @@
             },
             {
                 "text": "64b",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "192b",
-                "correctness": "correct"
+                "correctness": "incorrect"
             }
         ]
     },
