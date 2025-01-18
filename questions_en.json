@@ -6117,7 +6117,7 @@
             },
             {
                 "text": "as a result of the command, a secure tunnel will be established between the cerber system and polluks",
-                "correctness": "correct"
+                "correctness": "incorrect"
             }
         ]
     },
