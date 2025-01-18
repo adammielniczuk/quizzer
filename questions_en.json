@@ -1445,7 +1445,7 @@
             },
             {
                 "text": "the operation of writing the values of the parameters of this key by a process without write permission fails",
-                "correctness": "maybe"
+                "correctness": "correct"
             }
         ]
     },

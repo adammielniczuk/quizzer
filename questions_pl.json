@@ -1439,7 +1439,7 @@
             },
             {
                 "text": "operacja zapisu wartości parametrów tego klucza przez proces nie posiadający uprawnienia zapisu kończy się błędem",
-                "correctness": "maybe"
+                "correctness": "correct"
             }
         ]
     },
