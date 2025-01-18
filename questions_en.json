@@ -9233,7 +9233,7 @@
             },
             {
                 "text": "UAC protects against accidental execution of potentially dangerous programs by the user",
-                "correctness": "incorrect"
+                "correctness": "correct"
             }
         ]
     },

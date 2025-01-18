@@ -9249,7 +9249,7 @@
             },
             {
                 "text": "UAC chroni przed przypadkowym uruchomieniem potencjalnie niebezpiecznych programów przez użytkownika",
-                "correctness": "incorrect"
+                "correctness": "correct"
             }
         ]
     },
