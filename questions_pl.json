@@ -2541,7 +2541,7 @@
             },
             {
                 "text": "STP (Spanning Tree Protocol)",
-                "correctness": "maybe"
+                "correctness": "correct"
             },
             {
                 "text": "rlogin (Remote Login)",
@@ -8691,11 +8691,11 @@
             },
             {
                 "text": "klucz publiczny użytkownika, używany do odszyfrowywania kluczy FEK",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "klucz publiczny użytkownika, używany do szyfrowania kluczy FEK",
-                "correctness": "incorrect"
+                "correctness": "correct"
             }
         ]
     },
