@@ -1771,7 +1771,7 @@
             },
             {
                 "text": "SSL",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "CHAP",
