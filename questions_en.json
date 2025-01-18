@@ -7889,7 +7889,7 @@
             },
             {
                 "text": "hiding the granted permissions of additional users",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "it has no significance",
