@@ -835,7 +835,7 @@
             },
             {
                 "text": "DH",
-                "correctness": "correct"
+                "correctness": "incorrect"
             }
         ]
     },
@@ -1111,7 +1111,7 @@
             },
             {
                 "text": "dopiero po skonfigurowaniu iptables do przekierowania ruchu na port nasłuchującego superserwera xinetd?",
-                "correctness": "maybe"
+                "correctness": "correct"
             }
         ]
     },
@@ -1991,7 +1991,7 @@
             },
             {
                 "text": "stosuje różne klucze sesji do szyfrowania komunikacji w przeciwnych kierunkach",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
