@@ -8599,7 +8599,7 @@
             },
             {
                 "text": "program w postaci prostego firewalla za pomoca ktorego mozna blokowac wychodzace polaczenia, odpowiednie reguly zapisywane sa w plikach /etc/hosts.allow i /etc/hosts.deny",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "dodatkowy podsystem sieciowy dla systemu operacyjnego Linux pozwalajacy na nakladanie ograniczen dla polaczen przychodzacych",

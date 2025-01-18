@@ -8347,7 +8347,7 @@
             },
             {
                 "text": "a program in the form of a simple firewall through which outgoing connections can be blocked, appropriate rules are written in the files /etc/hosts.allow and /etc/hosts.deny",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "an additional network subsystem for the Linux operating system allowing for imposing restrictions on incoming connections",
