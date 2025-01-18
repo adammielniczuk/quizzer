@@ -4983,15 +4983,11 @@
         "answers": [
             {
                 "text": "gdy zbiór kategorii przynależności danych Z zawiera się w zbiorze kategorii P",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "gdy poziom zaufania P jest niższy niż Z",
                 "correctness": "correct"
-            },
-            {
-                "text": "gdy poziom zaufania P jest wyższy niż Z",
-                "correctness": "incorrect"
             },
             {
                 "text": "gdy poziom zaufania P jest wyższy niż Z",

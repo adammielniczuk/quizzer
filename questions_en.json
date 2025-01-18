@@ -4985,15 +4985,11 @@
         "answers": [
             {
                 "text": "when the set of data categories belonging to Z is included in the set of categories of P",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "when the trust level of P is lower than Z",
                 "correctness": "correct"
-            },
-            {
-                "text": "when the trust level of P is higher than Z",
-                "correctness": "incorrect"
             },
             {
                 "text": "when the trust level of P is higher than Z",
