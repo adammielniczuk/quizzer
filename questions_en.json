@@ -8689,11 +8689,11 @@
         "answers": [
             {
                 "text": "the login attempt counter is reset after each failed login",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "the login attempt counter is reset automatically after a set time",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "the login attempt counter can be reset by the administrator",
