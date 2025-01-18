@@ -2611,7 +2611,7 @@
             },
             {
                 "text": "postawienie fałszywego klucza w miejsce dowolnego z wymienianych",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -7385,7 +7385,7 @@
             },
             {
                 "text": "podstawienie falszywego klucza w miejsce dowolnego z wymienianych",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -8255,7 +8255,7 @@
             },
             {
                 "text": "jest definiowana przy instalacji systemu",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "mozna ja zmienic tylko przy wykorzystaniu dodatkowego oprogramowania",
@@ -8381,7 +8381,7 @@
             },
             {
                 "text": "dlugoscia kluczy",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "wielkoscia wynikowego skrotu",

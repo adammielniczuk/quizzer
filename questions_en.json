@@ -2617,7 +2617,7 @@
             },
             {
                 "text": "placing a false key in place of any exchanged key",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -7133,7 +7133,7 @@
             },
             {
                 "text": "substituting a false key in place of any of the exchanged keys",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -8003,7 +8003,7 @@
             },
             {
                 "text": "is defined during system installation",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "can only be changed using additional software",
@@ -8129,7 +8129,7 @@
             },
             {
                 "text": "by key length",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "by the size of the resulting hash",
