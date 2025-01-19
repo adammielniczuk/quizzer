@@ -6925,7 +6925,7 @@
         "answers": [
             {
                 "text": "PREROUTING(mangle) PREROUTING(nat) FILTERING POSTROUTING(nat) POSTROUTING(mangle)",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             },
             {
                 "text": "PREROUTING(nat) PREROUTING(mangle) FILTERING POSTROUTING(nat) POSTROUTING(mangle)",
@@ -8325,7 +8325,7 @@
             },
             {
                 "text": "no",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
@@ -8335,7 +8335,7 @@
         "answers": [
             {
                 "text": "a standalone program analyzing only tcp connections",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "a patch extending the functionality of the xinetd program",
@@ -8343,7 +8343,7 @@
             },
             {
                 "text": "a program analyzing only incoming tcp connections, but for port numbers on which services managed by xinetd are running",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             },
             {
                 "text": "a program in the form of a simple firewall through which outgoing connections can be blocked, appropriate rules are written in the files /etc/hosts.allow and /etc/hosts.deny",
