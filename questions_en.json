@@ -2875,11 +2875,11 @@
             },
             {
                 "text": "server authentication is optional",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "server authentication is mandatory",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "encryption of all communication is mandatory",
@@ -5969,7 +5969,7 @@
             },
             {
                 "text": "prior sending the public key of the sender to the recipient",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             },
             {
                 "text": "access to the CA center to download the certificate indicated in the signature (and other certificates on the certification path)",

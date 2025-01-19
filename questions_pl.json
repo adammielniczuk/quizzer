@@ -2869,11 +2869,11 @@
             },
             {
                 "text": "uwierzytelnianie serwera jest opcjonalne",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "uwierzytelnianie serwera jest obowiązkowe",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "szyfrowanie całej komunikacji jest obowiązkowe",
