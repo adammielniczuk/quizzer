@@ -6539,7 +6539,7 @@
             },
             {
                 "text": "the file is decrypted",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "the file will later require manual decryption",
@@ -6547,7 +6547,7 @@
             },
             {
                 "text": "the file can only be copied by the 'Data Recovery Agent' user",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
