@@ -5969,11 +5969,11 @@
             },
             {
                 "text": "prior sending the public key of the sender to the recipient",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "access to the CA center to download the certificate indicated in the signature (and other certificates on the certification path)",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "key exchange between sender and recipient using the Diffie-Hellman method",
