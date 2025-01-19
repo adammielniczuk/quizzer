@@ -139,7 +139,7 @@
             },
             {
                 "text": "AppContainer",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "Ring - 1 compartmentalization",
