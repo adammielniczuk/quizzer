@@ -8851,7 +8851,7 @@
             },
             {
                 "text": "the recipient's access to the CA's public key certificate that certified the sender's public key",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "prior transmission of the sender's public key to the recipient",
