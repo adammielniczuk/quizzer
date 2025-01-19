@@ -1735,7 +1735,7 @@
             },
             {
                 "text": "implementing group communication in a broadcast network",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -1985,7 +1985,7 @@
         "answers": [
             {
                 "text": "requires using each master key only once",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "limits the effects of finding a session key only to part of the communication",
@@ -1993,7 +1993,7 @@
             },
             {
                 "text": "each session key is generated from a different master key",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "uses different session keys to encrypt communication in opposite directions",
@@ -2839,7 +2839,7 @@
             },
             {
                 "text": "to verify a user's public key certificate, a root certificate (RootCA) is needed",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
