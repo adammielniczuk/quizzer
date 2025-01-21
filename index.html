@@ -97,7 +97,7 @@
 
     /* Container for the entire app */
     .app-container {
-      max-width: 600px;
+      max-width: 600px; /* Increased width to accommodate multiple questions */
       width: 100%;
       margin-top: 20px;
     }
@@ -112,8 +112,15 @@
       text-align: center;
       box-shadow: 0 2px 5px var(--card-shadow);
     }
-    #landingScreen button {
+    /* Modified to arrange buttons vertically */
+    #modeButtons {
       margin-top: 15px;
+      display: flex;
+      flex-direction: column; /* Stack buttons vertically */
+      align-items: center; /* Center buttons horizontally */
+      gap: 10px; /* Space between buttons */
+    }
+    #modeButtons button {
       background: var(--btn-bg);
       color: #e0e0e0;
       border: none;
@@ -122,8 +129,9 @@
       cursor: pointer;
       font-size: 1rem;
       transition: background-color 0.3s;
+      min-width: 50%; /* Fixed minimum width */
     }
-    #landingScreen button:hover {
+    #modeButtons button:hover {
       background: var(--btn-hover);
     }
 
@@ -196,6 +204,7 @@
       border-radius: 8px;
       margin-bottom: 20px;
       box-shadow: 0 2px 5px var(--card-shadow);
+      width: 100%;
     }
 
     /* Card-like styling for each question */
@@ -406,10 +415,12 @@
 
     /* --------- Added Styles Below --------- */
 
-    /* Add space between adjacent buttons */
-    button + button {
+    /* Add space between adjacent buttons, except mode buttons */
+    #actionButtons button + button,
+    #rateAnswersContainer button + button {
       margin-left: 10px; /* Adjust the value as needed for desired spacing */
     }
+
 
     /* Reduce vertical space between answers */
     .answers li {
@@ -450,7 +461,12 @@
         <i>Remove 1/4th of answers at random<br>(may leave no correct answers)</i>
       </label>
 
-      <button id="startQuizBtn">Start Quiz</button>
+      <!-- New Mode Buttons -->
+      <div id="modeButtons">
+        <button id="startQuizBtn">Old Mode</button>
+        <button id="lecturesModeBtn">Lectures Mode</button>
+        <button id="labModeBtn">Lab Mode</button>
+      </div>
     </div>
 
     <!-- Warning Modal -->
@@ -466,14 +482,11 @@
       <!-- Score Display -->
       <div id="scoreDisplay">Score: 0/0</div>
       
-      <!-- Question Card -->
-      <div id="questionCard" class="question-card">
-        <h2 id="questionText">Question will appear here</h2>
-        <ul id="answersList" class="answers"></ul>
-      </div>
+      <!-- Questions will be dynamically inserted here -->
+      <div id="questionsContainer"></div>
 
       <!-- Single Action Button (Check -> Next) + Explain with ChatGPT -->
-      <div style="text-align:center;">
+      <div id="actionButtons" style="text-align:center; margin-top: 20px;">
         <button id="singleActionBtn">Check answers</button>
         <button id="explainBtn">Ask ChatGPT</button>
       </div>
@@ -508,6 +521,7 @@
     let hasChecked = false;         // Track whether user has clicked "Check"
     let selectedLanguage = 'en';    // 'en' or 'pl' (default to 'en')
     let enableDropout = false;      // NEW: read from the checkbox
+    let mode = 'normal';            // 'normal', 'lectures', or 'lab'
 
     // We store the subset of answers shown to the user so we can score properly
     let currentRenderedAnswers = [];
@@ -520,11 +534,12 @@
     const quizContainer = document.getElementById('quizContainer');
 
     const startQuizBtn = document.getElementById('startQuizBtn');
+    const lecturesModeBtn = document.getElementById('lecturesModeBtn');
+    const labModeBtn = document.getElementById('labModeBtn');
     const closeWarningBtn = document.getElementById('closeWarningBtn');
     
     const scoreDisplay = document.getElementById('scoreDisplay');
-    const questionText = document.getElementById('questionText');
-    const answersList = document.getElementById('answersList');
+    const questionsContainer = document.getElementById('questionsContainer');
     
     const singleActionBtn = document.getElementById('singleActionBtn');
     const explainBtn = document.getElementById('explainBtn');
@@ -668,7 +683,25 @@
     // -----------------------
     // Start Quiz Flow
     // -----------------------
+    // Handler for Normal Mode
     startQuizBtn.addEventListener('click', () => {
+      mode = 'normal';
+      initiateQuiz();
+    });
+
+    // Handler for Lectures Mode
+    lecturesModeBtn.addEventListener('click', () => {
+      mode = 'lectures';
+      initiateQuiz();
+    });
+
+    // Handler for Lab Mode
+    labModeBtn.addEventListener('click', () => {
+      mode = 'lab';
+      initiateQuiz();
+    });
+
+    function initiateQuiz() {
       // 1) Check if language is selected
       if (!selectedLanguage) {
         languageError.style.display = 'block';
@@ -679,34 +712,54 @@
       
       // Show warning
       warningModal.style.display = 'flex';
-    });
+    }
 
     closeWarningBtn.addEventListener('click', () => {
       warningModal.style.display = 'none';
       landingScreen.style.display = 'none';
       quizContainer.style.display = 'block';
-      loadQuestions();
+      loadQuestions(mode);
     });
 
     // -----------------------
     // Fetch questions
     // -----------------------
-    function loadQuestions() {
+    function loadQuestions(selectedMode) {
       const questionsFile = selectedLanguage === 'pl' ? 'questions_pl.json' : 'questions_en.json';
       fetch(questionsFile)
         .then(response => response.json())
         .then(data => {
-          questions = data;
-          // Shuffle the questions
+          // Filter questions based on mode
+          if (selectedMode === 'lectures') {
+            questions = data.filter(q => q.number <= 400);
+          } else if (selectedMode === 'lab') {
+            questions = data.filter(q => q.number >= 1000);
+          } else {
+            questions = data; // Normal mode
+          }
+
+          // Shuffle the filtered questions
           shuffleArray(questions);
+          
+          // Select first 20 questions
+          questions = questions.slice(0, 20);
+
           // Shuffle answers in each question
           questions.forEach(q => shuffleArray(q.answers));
+          
           // Initialize quiz state
           currentQuestionIndex = 0;
           totalScore = 0.0;
           hasChecked = false;
           updateScoreDisplay();
-          showQuestion();
+
+          if (selectedMode === 'normal') {
+            // Show single question view
+            showQuestion();
+          } else {
+            // Show all questions on one page
+            showAllQuestions();
+          }
         })
         .catch(error => {
           console.error("Error loading questions:", error);
@@ -715,7 +768,7 @@
     }
 
     // -----------------------
-    // Show a Question
+    // Show a Single Question (Normal Mode)
     // -----------------------
     function showQuestion() {
       // Reset hasChecked for this new question
@@ -725,11 +778,19 @@
       explainBtn.style.display = 'none';
       rateAnswersContainer.style.display = 'none';
 
-      // Clear answers
-      answersList.innerHTML = "";
+      // Clear questions container
+      questionsContainer.innerHTML = "";
 
       const question = questions[currentQuestionIndex];
-      questionText.innerHTML = `Q${currentQuestionIndex + 1}: ${question.text}&ensp;<i>(id:${question.number})</i>`;
+      const questionDiv = document.createElement('div');
+      questionDiv.classList.add('question-card');
+      questionDiv.innerHTML = `
+        <h2>Q${currentQuestionIndex + 1}: ${question.text}&ensp;<i>(id:${question.number})</i></h2>
+        <ul class="answers" id="answersList"></ul>
+      `;
+      questionsContainer.appendChild(questionDiv);
+
+      const answersList = questionDiv.querySelector('#answersList');
 
       // Copy all answers for potential dropout
       let questionAnswers = [...question.answers];
@@ -772,6 +833,70 @@
     }
 
     // -----------------------
+    // Show All Questions (Lectures & Lab Modes)
+    // -----------------------
+    function showAllQuestions() {
+      hasChecked = false;
+      singleActionBtn.textContent = "Check all answers";
+      explainBtn.style.display = 'none';
+      rateAnswersContainer.style.display = 'none';
+
+      // Clear questions container
+      questionsContainer.innerHTML = "";
+
+      questions.forEach((question, qIndex) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.classList.add('question-card');
+        questionDiv.innerHTML = `
+          <h2>Q${qIndex + 1}: ${question.text}&ensp;<i>(id:${question.number})</i></h2>
+          <ul class="answers" id="answersList-${qIndex}"></ul>
+        `;
+        questionsContainer.appendChild(questionDiv);
+
+        const answersList = questionDiv.querySelector(`#answersList-${qIndex}`);
+
+        // Copy all answers for potential dropout
+        let questionAnswers = [...question.answers];
+
+        // If dropout is enabled, remove 1/4 of the answers at random
+        if (enableDropout) {
+          const dropoutCount = Math.floor(questionAnswers.length / 4);
+          for (let i = 0; i < dropoutCount; i++) {
+            const randIndex = Math.floor(Math.random() * questionAnswers.length);
+            questionAnswers.splice(randIndex, 1);
+          }
+        }
+
+        // Store the final answers that will be rendered
+        question.currentRenderedAnswers = questionAnswers;
+
+        // Render the checkboxes
+        questionAnswers.forEach((answer, index) => {
+          const li = document.createElement("li");
+          
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.id = `q${qIndex}-answer-${index}`;
+          checkbox.name = `q${qIndex}-answerGroup`;
+          checkbox.value = index;
+          
+          const label = document.createElement("label");
+          label.htmlFor = `q${qIndex}-answer-${index}`;
+          label.textContent = answer.text;
+          
+          li.appendChild(checkbox);
+          li.appendChild(label);
+          answersList.appendChild(li);
+        });
+      });
+
+      // Reset Like/Dislike buttons
+      resetLikeDislikeButtons();
+
+      updateScoreDisplay();
+    }
+
+    // -----------------------
     // Reset Like/Dislike Buttons
     // -----------------------
     function resetLikeDislikeButtons() {
@@ -789,16 +914,24 @@
     // -----------------------
     singleActionBtn.addEventListener('click', () => {
       if (!hasChecked) {
-        checkAnswers();
+        if (mode === 'normal') {
+          checkAnswersNormal();
+        } else {
+          checkAnswersBulk();
+        }
       } else {
-        nextQuestion();
+        if (mode === 'normal') {
+          nextQuestion();
+        } else {
+          submitBulkAnswers();
+        }
       }
     });
 
     // -----------------------
-    // Check Answers
+    // Check Answers for Normal Mode
     // -----------------------
-    function checkAnswers() {
+    function checkAnswersNormal() {
       const question = questions[currentQuestionIndex];
       const selectedCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]:checked');
       const allCheckboxes = document.querySelectorAll('#answersList input[type="checkbox"]');
@@ -862,17 +995,99 @@
       hasChecked = true;
       singleActionBtn.textContent = "Next question";
       
-      // Show the "Explain with ChatGPT" button and rating area
-      explainBtn.style.display = 'inline-block';
-      rateAnswersContainer.style.display = 'block';
-      // Update Like/Dislike counts so user sees the latest
-      updateLikeDislikeCounts(question.number);
+      // Show the "Explain with ChatGPT" button and rating area only in Normal Mode
+      if (mode === 'normal') {
+        explainBtn.style.display = 'inline-block';
+        rateAnswersContainer.style.display = 'block';
+        // Update Like/Dislike counts so user sees the latest
+        updateLikeDislikeCounts(question.number);
+      }
 
       updateScoreDisplay();
     }
 
     // -----------------------
-    // Next Question
+    // Check Answers for Lectures & Lab Modes
+    // -----------------------
+    function checkAnswersBulk() {
+      let totalCorrectPicked = 0;
+      let totalIncorrectPicked = 0;
+
+      questions.forEach((question, qIndex) => {
+        const selectedCheckboxes = document.querySelectorAll(`#answersList-${qIndex} input[type="checkbox"]:checked`);
+        const allCheckboxes = document.querySelectorAll(`#answersList-${qIndex} input[type="checkbox"]`);
+
+        // Reveal correctness among the answers that were actually shown
+        allCheckboxes.forEach((checkbox, i) => {
+          const correctness = question.currentRenderedAnswers[i].correctness;
+          
+          if (correctness === 'correct') {
+            checkbox.parentElement.classList.add('correct');
+          } else if (correctness === 'maybe') {
+            checkbox.parentElement.classList.add('maybe');
+          } else {
+            checkbox.parentElement.classList.add('incorrect');
+          }
+
+          // Disable all checkboxes after checking
+          checkbox.disabled = true; 
+        });
+
+        // --- SCORING ---
+        // We only score among the subset of answers shown
+        const totalCorrectOrMaybe = question.currentRenderedAnswers.filter(a => a.correctness === 'correct' || a.correctness === 'maybe').length;
+
+        let correctPicked = 0;
+        let incorrectPicked = 0;
+
+        selectedCheckboxes.forEach(cb => {
+          const idx = parseInt(cb.value);
+          const correctness = question.currentRenderedAnswers[idx].correctness;
+          if (correctness === 'correct' || correctness === 'maybe') {
+            correctPicked++;
+          } else {
+            incorrectPicked++;
+          }
+        });
+
+        // Fraction of correct answers chosen vs total correct (in the displayed subset)
+        const fractionCorrect = totalCorrectOrMaybe > 0 ? (correctPicked / totalCorrectOrMaybe) : 0;
+        // We subtract a penalty based on how many incorrect we picked relative to total correct
+        const fractionIncorrect = totalCorrectOrMaybe > 0 ? (incorrectPicked / totalCorrectOrMaybe) : 0;
+
+        let questionScore = fractionCorrect - fractionIncorrect;
+
+        // Clamp to [0, 1]
+        if (questionScore < 0) questionScore = 0;
+        if (questionScore > 1) questionScore = 1;
+
+        totalScore += questionScore;
+
+        // Track correctness with Counter API for each question
+        trackEvent('ANSWER_CHECKED', {
+          questionNumber: question.number,
+          questionText: question.text,
+          correctPicked: correctPicked,
+          incorrectPicked: incorrectPicked,
+          questionScore: questionScore
+        });
+      });
+
+      // Now user has checked
+      hasChecked = true;
+      singleActionBtn.textContent = "Submit Answers";
+      
+      // Show the "Explain with ChatGPT" button only in Normal Mode
+      if (mode === 'normal') {
+        explainBtn.style.display = 'inline-block';
+        rateAnswersContainer.style.display = 'block';
+      }
+
+      updateScoreDisplay();
+    }
+
+    // -----------------------
+    // Next Question (Normal Mode)
     // -----------------------
     function nextQuestion() {
       currentQuestionIndex++;
@@ -881,6 +1096,13 @@
       } else {
         showEndScreen();
       }
+    }
+
+    // -----------------------
+    // Submit Bulk Answers (Lectures & Lab Modes)
+    // -----------------------
+    function submitBulkAnswers() {
+      showEndScreen();
     }
 
     // -----------------------
@@ -898,7 +1120,12 @@
     // Update Score
     // -----------------------
     function updateScoreDisplay() {
-      const completedQuestions = hasChecked ? (currentQuestionIndex + 1) : currentQuestionIndex;
+      let completedQuestions;
+      if (mode === 'normal') {
+        completedQuestions = hasChecked ? (currentQuestionIndex + 1) : currentQuestionIndex;
+      } else {
+        completedQuestions = hasChecked ? questions.length : 0;
+      }
       scoreDisplay.textContent = `Score: ${totalScore === Math.floor(totalScore) ? Math.floor(totalScore) : totalScore.toFixed(2)}/${completedQuestions}`;
     }
 
@@ -921,22 +1148,46 @@
     // Explain with ChatGPT
     // -----------------------
     explainBtn.addEventListener('click', () => {
-      const question = questions[currentQuestionIndex];
-      
-      let explanationPrompt = `Please verify the accuracy of the answers and provide a brief explanation for each.\n\nQuestion: ${question.text}\nAnswers:\n`;
-      question.answers.forEach((answer, i) => {
-        explanationPrompt += `${i + 1}. ${answer.text} (${answer.correctness}?)\n`;
-      });
+      if (mode === 'normal') {
+        const question = questions[currentQuestionIndex];
+        
+        let explanationPrompt = `Please verify the accuracy of the answers and provide a brief explanation for each.\n\nQuestion: ${question.text}\nAnswers:\n`;
+        question.answers.forEach((answer, i) => {
+          explanationPrompt += `${i + 1}. ${answer.text} (${answer.correctness}?)\n`;
+        });
 
-      // Example ChatGPT link
-      const chatGPTUrl = `https://chat.openai.com/?temporary-chat=true&model=gpt-4o&hints=search&q=${encodeURIComponent(explanationPrompt)}`;
-      window.open(chatGPTUrl, '_blank');
+        // Example ChatGPT link
+        const chatGPTUrl = `https://chat.openai.com/?temporary-chat=true&model=gpt-4o&hints=search&q=${encodeURIComponent(explanationPrompt)}`;
+        window.open(chatGPTUrl, '_blank');
 
-      // Track GPT clicks
-      trackEvent('GPT_CLICK', {
-        questionNumber: question.number,
-        questionText: question.text
-      });
+        // Track GPT clicks
+        trackEvent('GPT_CLICK', {
+          questionNumber: question.number,
+          questionText: question.text
+        });
+      } else {
+        // For bulk mode, compile all explanations
+        let explanationPrompt = `Please verify the accuracy of the answers and provide a brief explanation for each question.\n\n`;
+        questions.forEach((question, qIndex) => {
+          explanationPrompt += `Question ${qIndex + 1}: ${question.text}\nAnswers:\n`;
+          question.answers.forEach((answer, i) => {
+            explanationPrompt += `  ${i + 1}. ${answer.text} (${answer.correctness}?)\n`;
+          });
+          explanationPrompt += `\n`;
+        });
+
+        // Example ChatGPT link
+        const chatGPTUrl = `https://chat.openai.com/?temporary-chat=true&model=gpt-4o&hints=search&q=${encodeURIComponent(explanationPrompt)}`;
+        window.open(chatGPTUrl, '_blank');
+
+        // Track GPT clicks for bulk
+        questions.forEach(question => {
+          trackEvent('GPT_CLICK', {
+            questionNumber: question.number,
+            questionText: question.text
+          });
+        });
+      }
     });
 
     // -----------------------
@@ -944,7 +1195,15 @@
     // -----------------------
     likeBtn.addEventListener('click', () => {
       if (likeBtn.disabled) return; // Prevent multiple clicks
-      trackEvent('LIKE', { questionNumber: questions[currentQuestionIndex].number });
+      if (mode === 'normal') {
+        const question = questions[currentQuestionIndex];
+        trackEvent('LIKE', { questionNumber: question.number });
+      } else {
+        // For bulk mode, track likes for all questions
+        questions.forEach(question => {
+          trackEvent('LIKE', { questionNumber: question.number });
+        });
+      }
       // Change button appearance
       likeBtn.classList.add('liked');
       likeBtn.disabled = true;
@@ -953,7 +1212,15 @@
 
     dislikeBtn.addEventListener('click', () => {
       if (dislikeBtn.disabled) return; // Prevent multiple clicks
-      trackEvent('DISLIKE', { questionNumber: questions[currentQuestionIndex].number });
+      if (mode === 'normal') {
+        const question = questions[currentQuestionIndex];
+        trackEvent('DISLIKE', { questionNumber: question.number });
+      } else {
+        // For bulk mode, track dislikes for all questions
+        questions.forEach(question => {
+          trackEvent('DISLIKE', { questionNumber: question.number });
+        });
+      }
       // Change button appearance
       dislikeBtn.classList.add('disliked');
       dislikeBtn.disabled = true;
