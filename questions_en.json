@@ -139,7 +139,7 @@
             },
             {
                 "text": "AppContainer",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "Ring - 1 compartmentalization",
@@ -563,7 +563,7 @@
             },
             {
                 "text": "operating system virtualization",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
@@ -841,7 +841,7 @@
             },
             {
                 "text": "DH",
-                "correctness": "correct"
+                "correctness": "incorrect"
             }
         ]
     },
@@ -1117,7 +1117,7 @@
             },
             {
                 "text": "only after configuring iptables to redirect traffic to the listening super server xinetd?",
-                "correctness": "maybe"
+                "correctness": "correct"
             }
         ]
     },
@@ -1445,7 +1445,7 @@
             },
             {
                 "text": "the operation of writing the values of the parameters of this key by a process without write permission fails",
-                "correctness": "maybe"
+                "correctness": "correct"
             }
         ]
     },
@@ -1735,7 +1735,7 @@
             },
             {
                 "text": "implementing group communication in a broadcast network",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -1771,7 +1771,7 @@
             },
             {
                 "text": "SSL",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "CHAP",
@@ -1985,7 +1985,7 @@
         "answers": [
             {
                 "text": "requires using each master key only once",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "limits the effects of finding a session key only to part of the communication",
@@ -1993,11 +1993,11 @@
             },
             {
                 "text": "each session key is generated from a different master key",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "uses different session keys to encrypt communication in opposite directions",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
@@ -2547,7 +2547,7 @@
             },
             {
                 "text": "STP (Spanning Tree Protocol)",
-                "correctness": "maybe"
+                "correctness": "correct"
             },
             {
                 "text": "rlogin (Remote Login)",
@@ -2617,7 +2617,7 @@
             },
             {
                 "text": "placing a false key in place of any exchanged key",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -2839,7 +2839,7 @@
             },
             {
                 "text": "to verify a user's public key certificate, a root certificate (RootCA) is needed",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
@@ -2875,11 +2875,11 @@
             },
             {
                 "text": "server authentication is optional",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "server authentication is mandatory",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "encryption of all communication is mandatory",
@@ -4985,15 +4985,11 @@
         "answers": [
             {
                 "text": "when the set of data categories belonging to Z is included in the set of categories of P",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "when the trust level of P is lower than Z",
                 "correctness": "correct"
-            },
-            {
-                "text": "when the trust level of P is higher than Z",
-                "correctness": "incorrect"
             },
             {
                 "text": "when the trust level of P is higher than Z",
@@ -5973,11 +5969,11 @@
             },
             {
                 "text": "prior sending the public key of the sender to the recipient",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "access to the CA center to download the certificate indicated in the signature (and other certificates on the certification path)",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "key exchange between sender and recipient using the Diffie-Hellman method",
@@ -6121,7 +6117,7 @@
             },
             {
                 "text": "as a result of the command, a secure tunnel will be established between the cerber system and polluks",
-                "correctness": "correct"
+                "correctness": "incorrect"
             }
         ]
     },
@@ -6543,7 +6539,7 @@
             },
             {
                 "text": "the file is decrypted",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "the file will later require manual decryption",
@@ -6551,7 +6547,7 @@
             },
             {
                 "text": "the file can only be copied by the 'Data Recovery Agent' user",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -6929,7 +6925,7 @@
         "answers": [
             {
                 "text": "PREROUTING(mangle) PREROUTING(nat) FILTERING POSTROUTING(nat) POSTROUTING(mangle)",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             },
             {
                 "text": "PREROUTING(nat) PREROUTING(mangle) FILTERING POSTROUTING(nat) POSTROUTING(mangle)",
@@ -7137,7 +7133,7 @@
             },
             {
                 "text": "substituting a false key in place of any of the exchanged keys",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -7893,7 +7889,7 @@
             },
             {
                 "text": "hiding the granted permissions of additional users",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "it has no significance",
@@ -8007,7 +8003,7 @@
             },
             {
                 "text": "is defined during system installation",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "can only be changed using additional software",
@@ -8133,7 +8129,7 @@
             },
             {
                 "text": "by key length",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "by the size of the resulting hash",
@@ -8329,7 +8325,7 @@
             },
             {
                 "text": "no",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
@@ -8339,7 +8335,7 @@
         "answers": [
             {
                 "text": "a standalone program analyzing only tcp connections",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "a patch extending the functionality of the xinetd program",
@@ -8347,11 +8343,11 @@
             },
             {
                 "text": "a program analyzing only incoming tcp connections, but for port numbers on which services managed by xinetd are running",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             },
             {
                 "text": "a program in the form of a simple firewall through which outgoing connections can be blocked, appropriate rules are written in the files /etc/hosts.allow and /etc/hosts.deny",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "an additional network subsystem for the Linux operating system allowing for imposing restrictions on incoming connections",
@@ -8679,11 +8675,11 @@
             },
             {
                 "text": "the user's public key, used to decrypt FEK keys",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "the user's public key, used to encrypt FEK keys",
-                "correctness": "incorrect"
+                "correctness": "correct"
             }
         ]
     },
@@ -8693,11 +8689,11 @@
         "answers": [
             {
                 "text": "the login attempt counter is reset after each failed login",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "the login attempt counter is reset automatically after a set time",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "the login attempt counter can be reset by the administrator",
@@ -8855,7 +8851,7 @@
             },
             {
                 "text": "the recipient's access to the CA's public key certificate that certified the sender's public key",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "prior transmission of the sender's public key to the recipient",
@@ -9237,7 +9233,7 @@
             },
             {
                 "text": "UAC protects against accidental execution of potentially dangerous programs by the user",
-                "correctness": "incorrect"
+                "correctness": "correct"
             }
         ]
     },

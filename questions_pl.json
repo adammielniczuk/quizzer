@@ -563,7 +563,7 @@
             },
             {
                 "text": "wirtualizacja systemu operacyjnego",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
@@ -835,7 +835,7 @@
             },
             {
                 "text": "DH",
-                "correctness": "correct"
+                "correctness": "incorrect"
             }
         ]
     },
@@ -1111,7 +1111,7 @@
             },
             {
                 "text": "dopiero po skonfigurowaniu iptables do przekierowania ruchu na port nasłuchującego superserwera xinetd?",
-                "correctness": "maybe"
+                "correctness": "correct"
             }
         ]
     },
@@ -1439,7 +1439,7 @@
             },
             {
                 "text": "operacja zapisu wartości parametrów tego klucza przez proces nie posiadający uprawnienia zapisu kończy się błędem",
-                "correctness": "maybe"
+                "correctness": "correct"
             }
         ]
     },
@@ -1991,7 +1991,7 @@
             },
             {
                 "text": "stosuje różne klucze sesji do szyfrowania komunikacji w przeciwnych kierunkach",
-                "correctness": "incorrect"
+                "correctness": "maybe"
             }
         ]
     },
@@ -2541,7 +2541,7 @@
             },
             {
                 "text": "STP (Spanning Tree Protocol)",
-                "correctness": "maybe"
+                "correctness": "correct"
             },
             {
                 "text": "rlogin (Remote Login)",
@@ -2611,7 +2611,7 @@
             },
             {
                 "text": "postawienie fałszywego klucza w miejsce dowolnego z wymienianych",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -2869,11 +2869,11 @@
             },
             {
                 "text": "uwierzytelnianie serwera jest opcjonalne",
-                "correctness": "incorrect"
+                "correctness": "correct"
             },
             {
                 "text": "uwierzytelnianie serwera jest obowiązkowe",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "szyfrowanie całej komunikacji jest obowiązkowe",
@@ -4983,15 +4983,11 @@
         "answers": [
             {
                 "text": "gdy zbiór kategorii przynależności danych Z zawiera się w zbiorze kategorii P",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "gdy poziom zaufania P jest niższy niż Z",
                 "correctness": "correct"
-            },
-            {
-                "text": "gdy poziom zaufania P jest wyższy niż Z",
-                "correctness": "incorrect"
             },
             {
                 "text": "gdy poziom zaufania P jest wyższy niż Z",
@@ -7389,7 +7385,7 @@
             },
             {
                 "text": "podstawienie falszywego klucza w miejsce dowolnego z wymienianych",
-                "correctness": "correct"
+                "correctness": "maybe"
             }
         ]
     },
@@ -8145,7 +8141,7 @@
             },
             {
                 "text": "ukrywanie nadanych uprawnien dodatkowych uzytkownikow",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "nie ma zadnego znaczenia",
@@ -8259,7 +8255,7 @@
             },
             {
                 "text": "jest definiowana przy instalacji systemu",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "mozna ja zmienic tylko przy wykorzystaniu dodatkowego oprogramowania",
@@ -8385,7 +8381,7 @@
             },
             {
                 "text": "dlugoscia kluczy",
-                "correctness": "correct"
+                "correctness": "maybe"
             },
             {
                 "text": "wielkoscia wynikowego skrotu",
@@ -8603,7 +8599,7 @@
             },
             {
                 "text": "program w postaci prostego firewalla za pomoca ktorego mozna blokowac wychodzace polaczenia, odpowiednie reguly zapisywane sa w plikach /etc/hosts.allow i /etc/hosts.deny",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "dodatkowy podsystem sieciowy dla systemu operacyjnego Linux pozwalajacy na nakladanie ograniczen dla polaczen przychodzacych",
@@ -8695,11 +8691,11 @@
             },
             {
                 "text": "klucz publiczny użytkownika, używany do odszyfrowywania kluczy FEK",
-                "correctness": "correct"
+                "correctness": "incorrect"
             },
             {
                 "text": "klucz publiczny użytkownika, używany do szyfrowania kluczy FEK",
-                "correctness": "incorrect"
+                "correctness": "correct"
             }
         ]
     },
@@ -9253,7 +9249,7 @@
             },
             {
                 "text": "UAC chroni przed przypadkowym uruchomieniem potencjalnie niebezpiecznych programów przez użytkownika",
-                "correctness": "incorrect"
+                "correctness": "correct"
             }
         ]
     },

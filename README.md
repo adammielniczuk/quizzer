@@ -1,4 +1,5 @@
 # [TAKE ME TO THE WEBSITE](https://dromaniv.github.io/quizzer/)
+FYI the polish baza might differ a bit from the english one
 
 yeah just substitute the `questions_en.json` file for whatever and it'll work
 
